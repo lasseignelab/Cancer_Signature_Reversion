@@ -7,6 +7,7 @@ Here we compare and contrast three methods for identifying disease signatures fo
 ## Authors
 
 - [Jennifer L. Fisher](https://www.github.com/JenFisher7), [Elizabeth J. Wilk](), [Victoria L Flanary](), [Vishal H. Oza](), [Brittany N. Lasseigne]()
+
 Department of Cell, Developmental and Integrative Biology, Heersink School of Medicine, University of Alabama at Birmingham, Birmingham, AL, 35294, USA.
 
 

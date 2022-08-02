@@ -34,9 +34,10 @@ In addition to the scripts here, the main Docker image used for this analysis is
 - Drug structure similarity analysis 
 - 220503_PRISM_top_candidates_plotting.Rmd
 
-
-<img src="https://www.lasseigne.org/img/main/lablogo.png" width="200" height="200">
 ## Lasseigne Lab 
+<img src="https://www.lasseigne.org/img/main/lablogo.png" width="200" height="200">
+
+
 
 ## Acknowledgements
 

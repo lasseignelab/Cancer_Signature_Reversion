@@ -37,7 +37,7 @@ In addition to the scripts here, the main Docker image used for this analysis is
 
 
 ## Lasseigne Lab 
-<img src="https://www.lasseigne.org/img/main/lablogo.png" width="100" height="100">
+<img src="https://www.lasseigne.org/img/main/lablogo.png" width="200" height="200">
 
 
 ## Acknowledgements

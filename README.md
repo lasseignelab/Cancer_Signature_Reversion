@@ -10,25 +10,43 @@ Here we compare and contrast three methods for identifying disease signatures fo
 
 Department of Cell, Developmental and Integrative Biology, Heersink School of Medicine, University of Alabama at Birmingham, Birmingham, AL, 35294, USA.
 
+## Dockers
+In addition to the scripts here, the main Docker image used for this analysis is publicly available on Docker Hub (jenfisher7/rstudio_tf_dr_v3). For the drug structure similarity analysis, a different Docker image was used (jenfisher7/rstudio_sex_bias_analysis).
 
+## Scripts
 
-## Roadmap
+- 211213_recount3_download.Rmd
+- 220728_plier_recount3_wo_gtex_tcga.Rmd
+- 220112_gbm_deseq2_transfer_learning.Rmd
+- Tau value calculations for GI1
+- 220118_GBM_SignatureSearch.Rmd
+- 220405_limma_GBM.Rmd 
+- 220523_pca_analysis_other_cancers.Rmd
+- Tau value calculations for other cancer cell lines
+- 220601_Liver_SignatureSearch.Rmd
+- 220606_lung_cancer_signaturesearch.Rmd
+- 220607_PAAD_SignatureSearch.Rmd
+- 220608_gbm_CT_PRSIM_UPDATE.Rmd
+- 220614_LINCS_profile_candidates_all_cancers.Rmd
+- 220627_more_methods_comparsions.Rmd
+- 220323_PLIER_LVs.Rmd
+- 220315_figure2_additional.Rmd <- this needs heavy adjustment
+- Drug structure similarity analysis 
+- 220503_PRISM_top_candidates_plotting.Rmd
 
-- Additional browser support
-
-- Add more integrations
 
 
 ## Lasseigne Lab 
-![Logo](https://www.lasseigne.org/img/main/lablogo.png)
+![Logo](https://www.lasseigne.org/img/main/lablogo.png =250x250)
 
 
 ## Acknowledgements
 
- - [Awesome Readme Templates](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
- - [Awesome README](https://github.com/matiassingers/awesome-readme)
- - [How to write a Good readme](https://bulldogjob.com/news/449-how-to-write-a-good-readme-for-your-github-project)
+ - Lasseigne Lab Members
 
+## Funding
+
+- RO3, etc. 
 
 ## References
 
@@ -47,5 +65,5 @@ Department of Cell, Developmental and Integrative Biology, Heersink School of Me
 
 ## License
 
-[MIT](https://choosealicense.com/licenses/mit/)
+TBD
 

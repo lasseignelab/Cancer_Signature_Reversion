@@ -1,8 +1,17 @@
 
-# Parallel gene set signature reversion reveals drug repurposing candidates for human cancers
+# Divergent disease signatures for signature reversion drug repurposing reveal promising candidates for low-survival human cancers
 
-Here we compare and contrast three methods for identifying disease signatures for downstream signature reversion drug repurposing candidate identification and demonstrate their ability to yield many novel drug repurposing candidates for the cancers with the lowest relative survival rates. Because our methodology relies on patient tumor RNA-Seq profiles from The Cancer Genome Atlas (TCGA) [1–4], LINCS 2020 data [5], and cancer-specific cell line omic profiles from DepMAP[6] and PRISM[6] we focused on low survival cancers where this data was available, namely pancreatic adenocarcinoma (5-year survival of less than 8% [7] liver hepatocellular carcinoma (5-year survival of 18%)[8], glioblastoma (5-year survival rate of 4%) [9], and lung adenocarcinoma (5-year survival of 5% for metastatic cases) [10]. By evaluating the different methods across these cancers, we found that the various methods detected distinct disease signatures to determine candidates, resulting in mostly unique drug candidates. We conclude that one disease signature method did not outperform the others. Future studies should consider using all these methods to determine drug repurposing candidates or develop a strategy to combine these disease signatures.
+Background:
 
+New therapies are critical to increased cancer survival, the leading cause of death worldwide. Drug repurposing is a promising approach as re-approving a drug requires less time and cost than drug discovery methods. A previously successful computionational method, signature reversion, leverages disease signatures and cell line perturbation signatures to detect perturbation signatures that are inversely related to disease signatures. However, there are limited signature reversion studies that assess the performance and biological relevance of disease signatures derived from different methods.  
+
+Results: 
+
+While identifying new repurposing candidates for four low-survival cancers (i.e., pancreatic adenocarcinoma, liver hepatocellular carcinoma, glioblastoma, and lung adenocarcinoma), we evaluated three methods for developing a disease signature: two differential gene expression methods limma and DESeq2 and MultiPLIER, a transfer learning approach. We used drugs in previous clinical trials and drug response in cancer cell lines as controls. Across the cancers, all the methods were significant at least once in both controls, and for each cancer, we found two or more methods were significant across the controls. However, within each of the cancers, the maximum overlap was one candidate. Thus, we hypothesize that the methods identify unique, efficacious candidates because they perturb divergent disease signatures. To investigate these disease signatures, we conducted several analyses including drug-drug perturbation similarity networks where we found that different methods are not preturbing the same disease pathways.  
+
+Conclusion: 
+
+By considering all these methods that construct divergent disease signatures, we discovered more promising candidates for low-survival cancers than by one method alone. 
 
 ## Authors
 
@@ -11,33 +20,77 @@ Here we compare and contrast three methods for identifying disease signatures fo
 Department of Cell, Developmental and Integrative Biology, Heersink School of Medicine, University of Alabama at Birmingham, Birmingham, AL, 35294, USA.
 
 ## Dockers
-In addition to the scripts here, the main Docker image used for this analysis is publicly available on Docker Hub (jenfisher7/rstudio_tf_dr_v3). For the drug structure similarity analysis, a different Docker image was used (jenfisher7/rstudio_sex_bias_analysis).
+In addition to the scripts here, the main Docker image used for this analysis is publicly available on Docker Hub (jenfisher7/rstudio_cancer_dr). For the drug structure similarity analysis, a different Docker image was used (jenfisher7/rstudio_sex_bias_analysis).
 
 ## Scripts
 
+**Download data**
 - 211213_recount3_download.Rmd
+
+**PLIER for transfer Learning**
 - 220728_plier_recount3_wo_gtex_tcga.Rmd
+
+**Tau value calcuation for signature reversion**
+
+These scripts use the conda environment file XXX. The ".sh" file was used to submit the cluster job on a slurm system in an array format. The R scripts were executed by these cluster job scripts. This allowed for more parrallel runs of the tau calculations. 
+
+For GBM:
+ - 220125_TAU_calc_LINCS_step2_v3.R
+ - 220125_TAU_calc_LINCS_step2_v4.sh
+ - 220208_tau_GBM_1HAE.sh
+ 
+For Pancreatic Cancer:
+ - 220526_tau_calc_YAPC.R
+ - 220526_tau_calc_YAPC.sh
+
+For Liver Cancer: 
+ - 220526_tau_calc_HEPG2.sh
+ - 220526_tau_calc_HEPG2.R
+
+For Lung Cancer
+ - 220526_tau_calc_A549.R
+ - 220526_tau_calc_A549.sh
+
+Combine list for lung, liver, and pancreatic cancer from array runs
+ - 220601_tau_A549_HEPG2_YAPC_df.R
+ - 220601_tau_A549_HEPG2_YAPC_df.sh
+
+**Disease signature development and signature reversion for glioblastoma, lung, liver, and pancreatic cancer**
 - 220112_gbm_deseq2_transfer_learning.Rmd
-- Tau value calculations for GI1
 - 220118_GBM_SignatureSearch.Rmd
 - 220405_limma_GBM.Rmd 
 - 220523_pca_analysis_other_cancers.Rmd
-- Tau value calculations for other cancer cell lines
 - 220601_Liver_SignatureSearch.Rmd
 - 220606_lung_cancer_signaturesearch.Rmd
 - 220607_PAAD_SignatureSearch.Rmd
+
+**Compare candidates and disease signatures**
 - 220608_gbm_CT_PRSIM_UPDATE.Rmd
 - 220614_LINCS_profile_candidates_all_cancers.Rmd
 - 220627_more_methods_comparsions.Rmd
+- 220805_network_differences_methods.Rmd
+- 220706_drug_structure_test_gbm.Rmd 
+- 220920_disease_genes_plots.Rmd
+
+**Additional transfer learning analysis**
+- 220427_transfer_learning_gene_label_testing.Rmd
 - 220323_PLIER_LVs.Rmd
-- 220315_figure2_additional.Rmd <- this needs heavy adjustment
-- Drug structure similarity analysis 
+
+**GBM candidate selection and candidate testing analysis**
 - 220503_PRISM_top_candidates_plotting.Rmd
+
+**Function scripts**
+- functions_cancer_signature_reversion_JLF.R
+  - This a script with functions for the analysis scripts above. Most of the functions were written by Jennifer Fisher. However, some of the functions were developed by others. These functions have a comment with them about who wrote the function and if there were any changes to them for our specific study. 
+- signaturesearch_functions.R
+  - This a script with functions from the singatureSearch R package for tau calculations. 
+- plier_util.R
+   - This is a script from the MultiPLIER paper. It contains functions used for the transfer learning components for this project. 
+- test_LV_differences.R
+  - This is a script from the MultiPLIER paper. It contains functions used for the transfer learning components for this project. 
 
 ## Lasseigne Lab 
 <img src="https://www.lasseigne.org/img/main/lablogo.png" width="200" height="200">
-
-
 
 ## Acknowledgements
 
@@ -59,7 +112,6 @@ In addition to the scripts here, the main Docker image used for this analysis is
 8. Villanueva A. Hepatocellular Carcinoma. N Engl J Med. 2019;380:1450–62.
 9. Poon MTC, Sudlow CLM, Figueroa JD, Brennan PM. Longer-term (≥ 2 years) survival in patients with glioblastoma in population-based studies pre- and post-2005: a systematic review and meta-analysis. Sci Rep. 2020;10:11622.
 10. Huang C-Y, Chen B-H, Chou W-C, Yang C-T, Chang JW-C. Factors associated with the prognosis and long-term survival of patients with metastatic lung adenocarcinoma: a retrospective analysis. J Thorac Dis. 2018;10:2070–8.
-
 
 
 ## License

@@ -15,16 +15,20 @@ By considering all these methods that construct divergent disease signatures, we
 
 ## Authors
 
-- [Jennifer L. Fisher](https://www.github.com/JenFisher7), [Elizabeth J. Wilk](), [Victoria L Flanary](), [Vishal H. Oza](), [Brittany N. Lasseigne]()
+- [Jennifer L. Fisher](https://www.github.com/JenFisher7), [Elizabeth J. Wilk](https://github.com/lizzyjoan), [Victoria L Flanary](https://github.com/vlflanary121), [Vishal H. Oza](https://github.com/vishaloza), [Brittany N. Lasseigne](https://github.com/blasseigne)
 
 Department of Cell, Developmental and Integrative Biology, Heersink School of Medicine, University of Alabama at Birmingham, Birmingham, AL, 35294, USA.
 
 ## Dockers
-In addition to the scripts here, the main Docker image used for this analysis is publicly available on Docker Hub (jenfisher7/rstudio_cancer_dr). For the drug structure similarity analysis, a different Docker image was used (jenfisher7/rstudio_sex_bias_analysis).
+In addition to the scripts here, the Docker images used for this analysis is publicly available on Docker Hub (jenfisher7/rstudio_cancer_dr & jenfisher7/rstudio_tf_dr_v3). For the tau calculations, a conda enviorement was used (SR_TAU_CELL_environment.yml).
 
 ## Scripts
 
 **Download data**
+
+Data was downloaded to the UAB Cheaha Cluster. The Docker/singularity (jenfisher7/rstudio_tf_dr_v3) was used for this download and for the PLIER transfer learning step. 
+Docker: jenfisher7/rstudio_tf_dr_v3
+
 - 211213_recount3_download.Rmd
 
 **PLIER for transfer Learning**
@@ -32,7 +36,7 @@ In addition to the scripts here, the main Docker image used for this analysis is
 
 **Tau value calcuation for signature reversion**
 
-These scripts use the conda environment file XXX. The ".sh" file was used to submit the cluster job on a slurm system in an array format. The R scripts were executed by these cluster job scripts. This allowed for more parrallel runs of the tau calculations. 
+These scripts use the conda environment file SR_TAU_CELL_environment.yml. The ".sh" file was used to submit the cluster job on a slurm system in an array format. The R scripts were executed by these cluster job scripts. This allowed for more parrallel runs of the tau calculations. 
 
 For GBM:
  - 220125_TAU_calc_LINCS_step2_v3.R
@@ -56,6 +60,10 @@ Combine list for lung, liver, and pancreatic cancer from array runs
  - 220601_tau_A549_HEPG2_YAPC_df.sh
 
 **Disease signature development and signature reversion for glioblastoma, lung, liver, and pancreatic cancer**
+
+Docker: jenfisher7/rstudio_cancer_dr
+
+- 220808_PRISM_data.Rmd
 - 220112_gbm_deseq2_transfer_learning.Rmd
 - 220118_GBM_SignatureSearch.Rmd
 - 220405_limma_GBM.Rmd 
@@ -65,6 +73,9 @@ Combine list for lung, liver, and pancreatic cancer from array runs
 - 220607_PAAD_SignatureSearch.Rmd
 
 **Compare candidates and disease signatures**
+
+Docker: jenfisher7/rstudio_cancer_dr
+
 - 220608_gbm_CT_PRSIM_UPDATE.Rmd
 - 220614_LINCS_profile_candidates_all_cancers.Rmd
 - 220627_more_methods_comparsions.Rmd
@@ -77,6 +88,9 @@ Combine list for lung, liver, and pancreatic cancer from array runs
 - 220323_PLIER_LVs.Rmd
 
 **GBM candidate selection and candidate testing analysis**
+
+Docker: jenfisher7/rstudio_cancer_dr
+
 - 220503_PRISM_top_candidates_plotting.Rmd
 
 **Function scripts**
@@ -116,5 +130,7 @@ Combine list for lung, liver, and pancreatic cancer from array runs
 
 ## License
 
-TBD
+MIT 
+
+Details in LICENSE file.
 

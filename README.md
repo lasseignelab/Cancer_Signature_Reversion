@@ -19,8 +19,8 @@ By considering all these methods that construct divergent disease signatures, we
 
 Department of Cell, Developmental and Integrative Biology, Heersink School of Medicine, University of Alabama at Birmingham, Birmingham, AL, 35294, USA.
 
-## Dockers
-In addition to the scripts here, the Docker images used for this analysis is publicly available on Docker Hub (jenfisher7/rstudio_cancer_dr & jenfisher7/rstudio_tf_dr_v3). For the tau calculations, a conda enviorement was used (SR_TAU_CELL_environment.yml).
+## Dockers and Conda Environment
+In addition to the scripts here, the Docker images used for this analysis is publicly available on Docker Hub (jenfisher7/rstudio_cancer_dr & jenfisher7/rstudio_tf_dr_v3). For the tau calculations, a conda environment was used (SR_TAU_CELL_environment.yml).
 
 ## Scripts
 

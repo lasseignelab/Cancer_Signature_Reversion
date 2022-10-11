@@ -38,9 +38,22 @@ Docker: jenfisher7/rstudio_tf_dr_v3
 
 These scripts use the conda environment file SR_TAU_CELL_environment.yml. The ".sh" file was used to submit the cluster job on a slurm system in an array format. The R scripts were executed by these cluster job scripts. This allowed for more parrallel runs of the tau calculations. 
 
+Set Up for Tau Calculations:
+ - 220125_conda_set_up.txt
+ - 220125_TAU_values_LINCS.R
+ - 220125_TAU_values_LINCS_test.sh
+
 For GBM:
  - 220125_TAU_calc_LINCS_step2_v3.R
  - 220125_TAU_calc_LINCS_step2_v4.sh
+ - 220203_tau_calc_1HAE.R 
+ 
+   **needed for the 220208_tau_GBM_1HAE.sh script but the 1HAE cell line tau values are not used in any other script of the project**
+ 
+ - 220203_tau_calc_1HAE.sh 
+ 
+   **needed for the 220208_tau_GBM_1HAE.sh script but the 1HAE cell line tau values are not used in any other script of the project**
+ 
  - 220208_tau_GBM_1HAE.sh
  
 For Pancreatic Cancer:

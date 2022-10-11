@@ -47,13 +47,9 @@ For GBM:
  - 220125_TAU_calc_LINCS_step2_v3.R
  - 220125_TAU_calc_LINCS_step2_v4.sh
  - 220203_tau_calc_1HAE.R 
- 
-   **needed for the 220208_tau_GBM_1HAE.sh script but the 1HAE cell line tau values are not used in any other script of the project**
- 
+   - needed for the 220208_tau_GBM_1HAE.sh script but the 1HAE cell line tau values are not used in any other script of the project**
  - 220203_tau_calc_1HAE.sh 
- 
-   **needed for the 220208_tau_GBM_1HAE.sh script but the 1HAE cell line tau values are not used in any other script of the project**
- 
+   - needed for the 220208_tau_GBM_1HAE.sh script but the 1HAE cell line tau values are not used in any other script of the project
  - 220208_tau_GBM_1HAE.sh
  
 For Pancreatic Cancer:

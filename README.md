@@ -47,7 +47,7 @@ For GBM:
  - 220125_TAU_calc_LINCS_step2_v3.R
  - 220125_TAU_calc_LINCS_step2_v4.sh
  - 220203_tau_calc_1HAE.R 
-   - needed for the 220208_tau_GBM_1HAE.sh script but the 1HAE cell line tau values are not used in any other script of the project**
+   - needed for the 220208_tau_GBM_1HAE.sh script but the 1HAE cell line tau values are not used in any other script of the project
  - 220203_tau_calc_1HAE.sh 
    - needed for the 220208_tau_GBM_1HAE.sh script but the 1HAE cell line tau values are not used in any other script of the project
  - 220208_tau_GBM_1HAE.sh
@@ -122,20 +122,6 @@ Docker: jenfisher7/rstudio_cancer_dr
 ## Funding
 
 - RO3, etc. 
-
-## References
-
-1. Cancer Genome Atlas Research Network. Electronic address: andrew_aguirre@dfci.harvard.edu, Cancer Genome Atlas Research Network. Integrated Genomic Characterization of Pancreatic Ductal Adenocarcinoma. Cancer Cell. 2017;32:185–203.e13.
-2. Cancer Genome Atlas Research Network. Electronic address: wheeler@bcm.edu, Cancer Genome Atlas Research Network. Comprehensive and Integrative Genomic Characterization of Hepatocellular Carcinoma. Cell. 2017;169:1327–41.e23.
-3. Cancer Genome Atlas Research Network. Comprehensive molecular profiling of lung adenocarcinoma. Nature. 2014;511:543–50.
-4. Brennan CW, Verhaak RGW, McKenna A, Campos B, Noushmehr H, Salama SR, et al. The somatic genomic landscape of glioblastoma. Cell. 2013;155:462–77.
-5. Yang C, Zhang H, Chen M, Wang S, Qian R, Zhang L, et al. A survey of optimal strategy for signature-based drug repositioning and an application to liver cancer. Elife [Internet]. 2022;11. Available from: http://dx.doi.org/10.7554/eLife.71880
-6. DepMap: The Cancer Dependency Map Project at Broad Institute [Internet]. [cited 2022 May 25]. Available from: https://depmap.org/portal/depmap/
-7. Orth M, Metzger P, Gerum S, Mayerle J, Schneider G, Belka C, et al. Pancreatic ductal adenocarcinoma: biological hallmarks, current status, and future perspectives of combined modality treatment approaches. Radiat Oncol. 2019;14:141.
-8. Villanueva A. Hepatocellular Carcinoma. N Engl J Med. 2019;380:1450–62.
-9. Poon MTC, Sudlow CLM, Figueroa JD, Brennan PM. Longer-term (≥ 2 years) survival in patients with glioblastoma in population-based studies pre- and post-2005: a systematic review and meta-analysis. Sci Rep. 2020;10:11622.
-10. Huang C-Y, Chen B-H, Chou W-C, Yang C-T, Chang JW-C. Factors associated with the prognosis and long-term survival of patients with metastatic lung adenocarcinoma: a retrospective analysis. J Thorac Dis. 2018;10:2070–8.
-
 
 ## License
 

@@ -30,6 +30,7 @@ Data was downloaded to the UAB Cheaha Cluster. The Docker/singularity (jenfisher
 Docker: jenfisher7/rstudio_tf_dr_v3
 
 - 211213_recount3_download.Rmd
+- Download scripts: data/recount3/gbm_gene_url_8.sh (1-8)
 
 **PLIER for transfer Learning**
 - 220728_plier_recount3_wo_gtex_tcga.Rmd

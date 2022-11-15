@@ -89,13 +89,11 @@ Docker: jenfisher7/rstudio_cancer_dr
 - 220608_gbm_CT_PRSIM_UPDATE.Rmd
 - 220614_LINCS_profile_candidates_all_cancers.Rmd
 - 220627_more_methods_comparsions.Rmd
+- 220323_PLIER_LVs.Rmd
 - 220805_network_differences_methods.Rmd
 - 220706_drug_structure_test_gbm.Rmd 
 - 220920_disease_genes_plots.Rmd
-
-**Additional transfer learning analysis**
 - 220427_transfer_learning_gene_label_testing.Rmd
-- 220323_PLIER_LVs.Rmd
 
 **GBM candidate selection and candidate testing analysis**
 

@@ -39,7 +39,7 @@ Note that in Dec. 2022, Recount3's server changed resulting in the current versi
 - 220728_plier_recount3_wo_gtex_tcga.Rmd
 
 **Package versions for the Docker/singulairty**
--221221_rstudio_tf_dr_v3_singularity.Rmd
+- 221221_rstudio_tf_dr_v3_singularity.Rmd
 
 **Tau value calcuation for signature reversion**
 

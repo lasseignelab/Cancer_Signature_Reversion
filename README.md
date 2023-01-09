@@ -76,11 +76,11 @@ Combine list for lung, liver, and pancreatic cancer from array runs:
  - 220601_tau_A549_HEPG2_YAPC_df.sh
  
  Package version for the conda environment:
- -221221_conda_packages.R
- -221221_conda_packages.sh
+ - 221221_conda_packages.R
+ - 221221_conda_packages.sh
  
 **Download recount3 for downstream analysis**
--221219_recount3_download_fix.sh
+- 221219_recount3_download_fix.sh
 
 **Disease signature development and signature reversion for glioblastoma, lung, liver, and pancreatic cancer**
 
@@ -148,5 +148,7 @@ Details in LICENSE file.
 ## Package versions and computing system information
 
 [Docker/singularity: jenfisher7/rstudio_tf_dr_v3](https://github.com/lasseignelab/Cancer_Signature_Reversion/blob/main/script/221221_rstudio_tf_dr_v3_singularity.html)
+
 [Conda: SR_TAU_CELL_environment.yml](https://github.com/lasseignelab/Cancer_Signature_Reversion/blob/main/script/18063914.c0152.conda.packages.out.txt)
+
 [Docker: jenfisher7/rstudio_cancer_dr](https://github.com/lasseignelab/Cancer_Signature_Reversion/blob/main/script/221221_rstudio_cancer_dr_info.html)

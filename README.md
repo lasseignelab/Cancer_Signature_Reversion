@@ -116,7 +116,7 @@ Docker: jenfisher7/rstudio_cancer_dr
 - 221130_gbm_drug_testing_res.Rmd
 
 **Package versions for the Docker rstudio_cancer_dr**
--221221_rstudio_cancer_dr_info.Rmd
+- 221221_rstudio_cancer_dr_info.Rmd
 
 **Function scripts**
 - functions_cancer_signature_reversion_JLF.R

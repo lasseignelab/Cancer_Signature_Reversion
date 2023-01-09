@@ -33,7 +33,7 @@ Docker: jenfisher7/rstudio_tf_dr_v3
 - 211213_recount3_download.Rmd
 - Download scripts: data/recount3/gbm_gene_url_8.sh (1-8)
 
-Note that in Dec. 2022, Recount3's server changed resulting in the current version of Recount3 in the dockers to not function correctly. However, we do provide the urls from Recount3 to download the data for the 211213_recount3_download.Rmd and data/recount3/gbm_gene_url_8.sh (1-8) scripts. In addition, scripts in the following sections have been adjusted to use the url downloaded data from Recount3: Disease signature development and signature reversion for glioblastoma, lung, liver, and pancreatic cancer, Compare candidates and disease signatures, & GBM candidate selection and candidate testing analysis. 
+Note that in Dec. 2022, Recount3's server changed resulting in the current version of Recount3 in the dockers to not function correctly. However, we do provide the urls from Recount3 to download the data for the 211213_recount3_download.Rmd and data/recount3/gbm_gene_url_8.sh (1-8) scripts. In addition, scripts in the following sections have been adjusted to use the url downloaded data from Recount3: **Disease signature development and signature reversion for glioblastoma, lung, liver, and pancreatic cancer**, **Compare candidates and disease signatures**, & **GBM candidate selection and candidate testing analysis**. 
 
 **PLIER for transfer Learning**
 - 220728_plier_recount3_wo_gtex_tcga.Rmd

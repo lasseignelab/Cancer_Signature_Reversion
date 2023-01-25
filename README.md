@@ -7,11 +7,11 @@ New therapeutic options are critical to increased cancer patient survival. Drug 
 
 Results: 
 
- For the differential gene expression methods limma and DESeq2 and the transfer learning method MultiPLIER, we evaluated the identified disease-associated gene expression signatures and their signature reversion drug repurposing candidates. Across the four cancers, almost all of the disease-associated signature reversion repurposing results were enriched for unique candidates either in previous clinical trials or that performed well in the PRISM drug screen. Additionally, we further tested the GBM candidates pamidronate and nimodipine and found that they inhibit GBM cell growth in the U251 cell line and the JX39 PDX in vitro models.
+ For the differential gene expression methods limma and DESeq2 and the transfer learning method MultiPLIER, we evaluated the identified disease-associated gene expression signatures and their signature reversion drug repurposing candidates. Across the four cancers, almost all of the disease-associated signature reversion repurposing results were enriched for unique drug candidates either in previous clinical trials or that performed well in the PRISM drug screen. Additionally, we further tested the GBM candidates pamidronate and nimodipine and found that they inhibit GBM cell growth in the U251 cell line and the JX39 PDX in vitro models.
 
 Conclusion: 
 
-We conclude that one disease-associated gene signature approach did not outperform the others so future studies should consider using multiple signatures to determine drug repurposing candidates for further screening. We also identify prioritized drug repurposing candidates for four of the most deadly human cancers, providing a resource for future research studies. 
+We conclude that one disease-associated gene signature approach did not outperform the others so future studies should consider using multiple signatures to prioritize drug repurposing candidates for further screening. We also identify prioritized drug repurposing candidates for four of the most deadly human cancers, providing a resource for future research studies. 
 
 
 ## Authors
@@ -133,7 +133,7 @@ Docker: jenfisher7/rstudio_cancer_dr
 
 ## Acknowledgements
 
- - We would like to thank the all the Lasseigne Lab for providing feedback during this project.
+ - We would like to thank all the Lasseigne Lab members for providing feedback during this project.
 
 ## Funding
 

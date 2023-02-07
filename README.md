@@ -106,6 +106,7 @@ Docker: jenfisher7/rstudio_cancer_dr
 - 220805_network_differences_methods.Rmd
 - 220706_drug_structure_test_gbm.Rmd 
 - 220920_disease_genes_plots.Rmd
+- 230207_drug_target_pathway_exploration.Rmd
 - 220427_transfer_learning_gene_label_testing.Rmd
 
 **GBM candidate selection and candidate testing analysis**

@@ -16,7 +16,7 @@ We conclude that one disease-associated gene signature approach did not outperfo
 
 ## Authors
 
-- [Jennifer L. Fisher](https://www.github.com/JenFisher7), [Elizabeth J. Wilk](https://github.com/lizzyjoan), [Vishal H. Oza](https://github.com/vishaloza), [Timothy C. Howton](https://github.com/tchowton), [Victoria L Flanary](https://github.com/vlflanary121), [Amanda D. Clark](https://github.com/adc0032), Anita B. Hjelmeland , & [Brittany N. Lasseigne](https://github.com/blasseigne)
+- [Jennifer L. Fisher](https://www.github.com/JenFisher7), [Elizabeth J. Wilk](https://github.com/lizzyjoan), [Vishal H. Oza](https://github.com/vishaloza), [Timothy C. Howton](https://github.com/tchowton), [Victoria L Flanary](https://github.com/vlflanary121), [Amanda D. Clark](https://github.com/adc0032), & [Brittany N. Lasseigne](https://github.com/blasseigne)
 
 Department of Cell, Developmental and Integrative Biology, Heersink School of Medicine, University of Alabama at Birmingham, Birmingham, AL, 35294, USA.
 

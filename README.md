@@ -1,5 +1,5 @@
 
-# Signature reversion of three disease-associated signature approaches prioritizes drug repurposing candidates for low-survival human cancers
+# Signature reversion of three disease-associated gene signatures prioritizes cancer drug repurposing candidates 
 
 Background:
 

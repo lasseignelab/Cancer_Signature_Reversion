@@ -1,0 +1,47 @@
+{
+    "creators": [
+        {
+            "orcid": "0000-0002-9657-1216", 
+            "affiliation": "CDIB, Heersink School of Medicine, UAB", 
+            "name": "Jennifer L. Fisher"
+        }, 
+        {
+            "orcid": "0000-0002-7078-1215", 
+            "affiliation": "CDIB, Heersink School of Medicine, UAB", 
+            "name": "Elizabeth J. Wilk"
+        }, 
+        {
+            "orcid": "0000-0001-6990-0267", 
+            "affiliation": "CDIB, Heersink School of Medicine, UAB", 
+            "name": "Vishal H. Oza"
+        },
+        {
+            "orcid": "0000-0002-9423-0135", 
+            "affiliation": "CDIB, Heersink School of Medicine, UAB", 
+            "name": "Timothy C. Howton"
+        }, 
+        {
+            "orcid": "0000-0003-4208-3695", 
+            "affiliation": "CDIB, Heersink School of Medicine, UAB", 
+            "name": "Victoria L. Flanary"
+        },
+         {
+            "orcid": "0000-0002-1186-3114", 
+            "affiliation": "CDIB, Heersink School of Medicine, UAB", 
+            "name": "Amanda D. Clark"
+        },
+        {
+            "orcid": "0000-0002-1642-8904", 
+            "affiliation": "CDIB, Heersink School of Medicine, UAB", 
+            "name": "Brittany N. Lasseigne"
+        }
+    ], 
+    "access_right": "open", 
+    "related_identifiers": [
+        {
+            "scheme": "url", 
+            "identifier": "https://github.com/lasseignelab/Cancer_Signature_Reversion/tree/v1.1.1", 
+            "relation": "isSupplementTo"
+        }
+    ]
+}

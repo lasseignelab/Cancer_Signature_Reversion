@@ -1,0 +1,335 @@
+---
+title: "230628_upset_plots"
+author: "Jennifer Fisher"
+date: '2023-06-29'
+output:
+  html_document: default
+---
+      Goal/Purpose of operations: 
+      Convert all the venn diagrams into upset plots
+    
+    Finished psedocode on: 
+    230628
+    
+    System which operations were done on: 
+    my laptop
+    
+    GitHub Repo:
+    Cancer_Signature_Reversion
+    
+    Docker/Singularity: 
+    rstudio_cancer_dr
+    
+    Directory of operations: 
+    "/home/rstudio"
+    
+    Scripts being edited for operations:
+    na
+    
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ComplexHeatmap)
+library(tidyverse)
+```
+
+```{r}
+#function for upset plots
+
+make_upset_plot<- function(Transfer_Learning_List, limma_list, deseq2_list, file_name){
+  comb_mat<- make_comb_mat(list("Transfer Learning" = Transfer_Learning_List, "limma" = limma_list, 
+                                "DESeq2" = deseq2_list), mode = "distinct")
+  
+  png(file_name, width = 5,height = 5, units="in", res = 1200)
+  cs <-  comb_size(comb_mat)
+  plot<- UpSet(comb_mat, comb_order = order(-comb_size(comb_mat)), 
+               top_annotation = HeatmapAnnotation("Intersection size" = anno_barplot(cs, 
+                                       ylim = c(0, max(cs)*1.1),
+                                       border = FALSE, 
+                                       gp = gpar(fill = "black", fontsize = 11, face="bold"), 
+                                       height = unit(4, "cm")), 
+    annotation_name_side = "left", 
+    annotation_name_rot = 90))
+  plot_draw <- draw(plot)
+  od <- column_order(plot_draw)
+  decorate_annotation("Intersection size", {
+    grid.text(cs[od], x = seq_along(cs), y = unit(cs[od], "native") + unit(2, "pt"), 
+              default.units = "native", just = c("left", "bottom"), 
+              gp = gpar(fontsize = 11, face="bold",col = "#404040"), rot = 45)})
+  dev.off()
+}
+```
+
+#upset plots of diseases signatures
+```{r}
+#GBM
+gbm_tfl_input <- readRDS("~/output/TF_L_GBM/22004_SR_gene_list_gbm_tfl.rds")
+gbm_deseq2_input <- readRDS("~/output/deseq2_gbm/SR_gene_list_gbm_deseq2.rds")
+gbm_limma_input <- readRDS("~/output/limma_gbm/SR_gene_list_gbm_limma.rds")
+
+make_upset_plot(Transfer_Learning_List = unlist(gbm_tfl_input), limma_list = unlist(gbm_limma_input),
+                deseq2_list = unlist(gbm_deseq2_input), 
+                file_name= "~/output/upset_plots/gbm_disease_sign_upset_plot.png")
+
+#LIHC
+
+liver_tfl_input <- readRDS("~/output/liver_cancer/TFL_res/SR_gene_list_liver_tfl.rds")
+liver_deseq2_input <- readRDS("~/output/liver_cancer/deseq2_res/SR_gene_list_liver_deseq2.rds")
+liver_limma_input <- readRDS("~/output/liver_cancer/limma_res/SR_gene_list_liver_limma.rds")
+
+make_upset_plot(Transfer_Learning_List = unlist(liver_tfl_input), limma_list = unlist(liver_limma_input),
+                deseq2_list = unlist(liver_deseq2_input), 
+                file_name= "~/output/upset_plots/lihc_disease_sign_upset_plot.png")
+
+#LUAD
+#disease singatures 
+lung_deseq2_input <- readRDS("~/output/lung_cancer/deseq2_res/SR_gene_list_luad_deseq2.rds")
+lung_tfl_input<- readRDS("~/output/lung_cancer/deseq2_res/SR_gene_list_lung_tfl.rds")
+lung_limma_input<- readRDS("~/output/lung_cancer/deseq2_res/SR_gene_list_lung_limma.rds")
+
+make_upset_plot(Transfer_Learning_List = unlist(lung_tfl_input), limma_list = unlist(lung_limma_input),
+                deseq2_list = unlist(lung_deseq2_input), 
+                file_name= "~/output/upset_plots/luad_disease_sign_upset_plot.png")
+
+
+#PAAD
+#disease singatures 
+paad_tfl_input <- readRDS("~/output/pancreas_cancer/TFL_res/SR_gene_list_paad_tfl.rds")
+paad_limma_input <- readRDS("~/output/pancreas_cancer/limma_res/SR_gene_list_paad_limma.rds")
+paad_deseq2_input <- readRDS("~/output/pancreas_cancer/deseq2_res/SR_gene_list_paad_deseq2.rds")
+
+make_upset_plot(Transfer_Learning_List = unlist(paad_tfl_input), limma_list = unlist(paad_limma_input),
+                deseq2_list = unlist(paad_deseq2_input), 
+                file_name= "~/output/upset_plots/paad_disease_sign_upset_plot.png")
+
+
+```
+
+
+
+#drug candidates
+
+```{r}
+#GBM
+lincs_limma_gbm_res_GI1_fda_approved<- read_csv( "~/output/limma_gbm/220808_SR_LINCS_GBM_top_RES_all.csv")
+lincs_deseq2_gbm_res_GI1_fda_approved <- read_csv( "~/output/deseq2_gbm/220928_SR_LINCS_GBM_DESEQ2_RES_all.csv")
+lincs_tfl_gbm_res_GI1_fda_approved <- read_csv( "~/output/TF_L_GBM/220808_SR_LINCS_GBM_top_RES_all.csv")
+
+make_upset_plot(Transfer_Learning_List = lincs_tfl_gbm_res_GI1_fda_approved$pert, limma_list = lincs_limma_gbm_res_GI1_fda_approved$pert,
+                deseq2_list = lincs_deseq2_gbm_res_GI1_fda_approved$pert, 
+                file_name= "~/output/upset_plots/gbm_candidate_upset_plot.png")
+
+
+#LIHC
+lincs_deseq_gbm_res_HEPG2_fda_approved <- read_csv("~/output/liver_cancer/deseq2_res/220929_SR_LINCS_LIHC_DESEQ2_RES_tau.csv")
+lincs_deseq_res_HEPG2_fda_approved <- lincs_deseq_gbm_res_HEPG2_fda_approved [lincs_deseq_gbm_res_HEPG2_fda_approved$fda_approved== TRUE,]
+
+lincs_limma_gbm_res_HEPG2_fda_approved <- read_csv("~/output/liver_cancer/limma_res/220808_SR_LINCS_LIHC_limma_RES_tau.csv")
+lincs_limma_res_HEPG2_fda_approved<- lincs_limma_gbm_res_HEPG2_fda_approved[ lincs_limma_gbm_res_HEPG2_fda_approved$fda_approved== TRUE,]
+#wrong date on file
+lincs_tfl_gbm_res_HEPG2_fda_approved <- read_csv("~/output/liver_cancer/TFL_res/220602_SR_LINCS_LIHC_TFL_RES_tau.csv")
+lincs_tfl_res_HEPG2_fda_approved<- lincs_tfl_gbm_res_HEPG2_fda_approved[ lincs_tfl_gbm_res_HEPG2_fda_approved$fda_approved == TRUE, ]
+
+make_upset_plot(Transfer_Learning_List = lincs_tfl_res_HEPG2_fda_approved$pert, 
+                limma_list = lincs_limma_res_HEPG2_fda_approved$pert,
+                deseq2_list = lincs_deseq_res_HEPG2_fda_approved$pert, 
+                file_name= "~/output/upset_plots/lihc_candidate_upset_plot.png")
+
+
+#LUAD
+lincs_limma_res_A549_fda_approved<- read_csv("~/output/lung_cancer/limma_res/220808_SR_LINCS_LUAD_limma_RES_tau.csv")
+lincs_limma_res_A549_fda_approved<- lincs_limma_res_A549_fda_approved[lincs_limma_res_A549_fda_approved$fda_approved == TRUE, ]
+lincs_deseq_res_A549_fda_approved<- read_csv("~/output/lung_cancer/deseq2_res/220929_SR_LINCS_LUAD_DESEQ2_RES_tau.csv")
+lincs_deseq_res_A549_fda_approved<- lincs_deseq_res_A549_fda_approved[lincs_deseq_res_A549_fda_approved$fda_approved == TRUE, ]
+lincs_tfl_res_A549_fda_approved<- read_csv("~/output/lung_cancer/TFL_res/220808_SR_LINCS_LUAD_TFL_RES_tau.csv")
+lincs_tfl_res_A549_fda_approved<- lincs_tfl_res_A549_fda_approved[lincs_tfl_res_A549_fda_approved$fda_approved==TRUE,]
+
+make_upset_plot(Transfer_Learning_List = lincs_tfl_res_A549_fda_approved$pert, limma_list = lincs_limma_res_A549_fda_approved$pert,
+                deseq2_list = lincs_deseq_res_A549_fda_approved$pert, 
+                file_name= "~/output/upset_plots/luad_candidate_upset_plot.png")
+
+
+#PAAD
+lincs_deseq_res_YAPC_fda_approved <- read_csv("~/output/pancreas_cancer/deseq2_res/220929_SR_LINCS_PAAD_DESEQ2_RES_tau.csv")
+lincs_deseq_res_YAPC_fda_approved<- lincs_deseq_res_YAPC_fda_approved[lincs_deseq_res_YAPC_fda_approved$fda_approved == TRUE,]
+
+lincs_limma_res_YAPC_fda_approved <- read_csv("~/output/pancreas_cancer/limma_res/220808_SR_LINCS_PAAD_limma_RES_tau.csv")
+lincs_limma_res_YAPC_fda_approved<- lincs_limma_res_YAPC_fda_approved[lincs_limma_res_YAPC_fda_approved$fda_approved ==TRUE, ]
+
+lincs_tfl_res_YAPC_fda_approved <- read_csv("~/output/pancreas_cancer/TFL_res/220808_SR_LINCS_PAAD_TFL_RES_tau.csv")
+lincs_tfl_res_YAPC_fda_approved<- lincs_tfl_res_YAPC_fda_approved[ lincs_tfl_res_YAPC_fda_approved$fda_approved ==TRUE,]
+
+make_upset_plot(Transfer_Learning_List = lincs_tfl_res_YAPC_fda_approved$pert, limma_list = lincs_limma_res_YAPC_fda_approved$pert,
+                deseq2_list = lincs_deseq_res_YAPC_fda_approved$pert, 
+                file_name= "~/output/upset_plots/paad_candidate_upset_plot.png")
+
+```
+
+#drug targets
+```{r}
+#GBM
+limma_gbm_targets <- unique(unlist(str_split(lincs_limma_gbm_res_GI1_fda_approved$t_gn_sym, "; ")))
+
+deseq_gbm_targets <- unique(unlist(str_split(lincs_deseq2_gbm_res_GI1_fda_approved$t_gn_sym, "; ")))
+deseq_gbm_targets <- deseq_gbm_targets [complete.cases(deseq_gbm_targets )]
+tfl_gbm_targets <- unique(unlist(str_split(lincs_tfl_gbm_res_GI1_fda_approved$t_gn_sym, "; ")))
+tfl_gbm_targets<- tfl_gbm_targets[!is.na(tfl_gbm_targets)]
+
+make_upset_plot(Transfer_Learning_List = tfl_gbm_targets, limma_list = limma_gbm_targets,
+                deseq2_list = deseq_gbm_targets, 
+                file_name= "~/output/upset_plots/gbm_drug_target_upset_plot.png")
+
+
+
+#LIHC
+limma_lihc_targets <- unique(unlist(str_split(lincs_limma_res_HEPG2_fda_approved$t_gn_sym, "; ")))
+limma_lihc_targets <- limma_lihc_targets[complete.cases(limma_lihc_targets )]
+
+deseq_lihc_targets <- unique(unlist(str_split(lincs_deseq_res_HEPG2_fda_approved$t_gn_sym, "; ")))
+deseq_lihc_targets <- deseq_lihc_targets[complete.cases(deseq_lihc_targets)]
+
+tfl_lihc_targets <- unique(unlist(str_split(lincs_tfl_res_HEPG2_fda_approved$t_gn_sym, "; ")))
+tfl_lihc_targets <- tfl_lihc_targets[complete.cases(tfl_lihc_targets )]
+
+make_upset_plot(Transfer_Learning_List = tfl_lihc_targets, limma_list = limma_lihc_targets,
+                deseq2_list = deseq_lihc_targets, 
+                file_name= "~/output/upset_plots/lihc_drug_target_upset_plot.png")
+
+#LUAD
+limma_luad_targets <- unique(unlist(str_split(lincs_limma_res_A549_fda_approved$t_gn_sym, "; ")))
+limma_luad_targets <- limma_luad_targets[complete.cases(limma_luad_targets )]
+
+deseq_luad_targets <- unique(unlist(str_split(lincs_deseq_res_A549_fda_approved$t_gn_sym, "; ")))
+deseq_luad_targets <- deseq_luad_targets[complete.cases(deseq_luad_targets)]
+
+tfl_luad_targets <- unique(unlist(str_split(lincs_tfl_res_A549_fda_approved$t_gn_sym, "; ")))
+tfl_luad_targets <- tfl_luad_targets[complete.cases(tfl_luad_targets )]
+
+make_upset_plot(Transfer_Learning_List = tfl_luad_targets, limma_list = limma_luad_targets,
+                deseq2_list = deseq_luad_targets, 
+                file_name= "~/output/upset_plots/luad_drug_target_upset_plot.png")
+
+
+#PAAD
+limma_paad_targets <- unique(unlist(str_split(lincs_limma_res_YAPC_fda_approved$t_gn_sym, "; ")))
+limma_paad_targets <- limma_gbm_targets[complete.cases(limma_gbm_targets )]
+
+deseq_paad_targets <- unique(unlist(str_split(lincs_deseq_res_YAPC_fda_approved $t_gn_sym, "; ")))
+deseq_paad_targets <- deseq_paad_targets[complete.cases(deseq_paad_targets)]
+
+tfl_paad_targets <- unique(unlist(str_split(lincs_tfl_res_YAPC_fda_approved$t_gn_sym, "; ")))
+tfl_paad_targets <- tfl_paad_targets[complete.cases(tfl_paad_targets )]
+
+make_upset_plot(Transfer_Learning_List = tfl_paad_targets, limma_list = limma_paad_targets,
+                deseq2_list = deseq_paad_targets, 
+                file_name= "~/output/upset_plots/paad_drug_target_upset_plot.png")
+```
+
+#pathway analysis results
+
+```{r}
+#GBM
+limma_pathways <- read_delim("~/output/gbm_plots/limma_pathways.csv", 
+                             delim = ";", escape_double = FALSE, trim_ws = TRUE)
+TFL_pathways <- read_delim("~/output/gbm_plots/TFL_pathways.csv", 
+                           delim = ";", escape_double = FALSE, trim_ws = TRUE)
+DESeq2_pathways <- read_delim("~/output/gbm_plots/DESEq2_pathways.csv", 
+                           delim = ";", escape_double = FALSE, trim_ws = TRUE)
+#LIHC
+LIHC_limma_pathways <- read_delim("~/output/liver_cancer/limma_pathways.csv", 
+                             delim = ";", escape_double = FALSE, trim_ws = TRUE)
+LIHC_TFL_pathways <- read_delim("~/output/liver_cancer/TFL_pathways.csv", 
+                           delim = ";", escape_double = FALSE, trim_ws = TRUE)
+LIHC_DESeq2_pathways <- read_delim("~/output/liver_cancer/DESEq2_pathways.csv", 
+                              delim = ";", escape_double = FALSE, trim_ws = TRUE)
+#LUAD
+LUAD_limma_pathways <- read_delim("~/output/lung_cancer/limma_pathways.csv", 
+                                  delim = ";", escape_double = FALSE, trim_ws = TRUE)
+LUAD_TFL_pathways <- read_delim("~/output/lung_cancer/TFL_pathways.csv", 
+                                delim = ";", escape_double = FALSE, trim_ws = TRUE)
+LUAD_DESeq2_pathways <- read_delim("~/output/lung_cancer/DESEq2_pathways.csv", 
+                                   delim = ";", escape_double = FALSE, trim_ws = TRUE)
+#PAAD
+PAAD_limma_pathways <- read_delim("~/output/pancreas_cancer/limma_pathways.csv", 
+                                  delim = ";", escape_double = FALSE, trim_ws = TRUE)
+PAAD_TFL_pathways <- read_delim("~/output/pancreas_cancer/TFL_pathways.csv", 
+                                delim = ";", escape_double = FALSE, trim_ws = TRUE)
+PAAD_DESeq2_pathways <- read_delim("~/output/pancreas_cancer/DESEq2_pathways.csv", 
+                                   delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+```
+
+#upset of the gene sets up 
+```{r}
+#GBM
+
+make_upset_plot(Transfer_Learning_List = TFL_pathways$term_id[TFL_pathways$set == "Up"], 
+                limma_list = limma_pathways$term_id[limma_pathways$set == "Up"],
+                deseq2_list = DESeq2_pathways$term_id[DESeq2_pathways$set == "Up"], 
+                file_name= "~/output/upset_plots/gbm_up_pathway_upset_plot.png")
+
+#LIHC
+
+make_upset_plot(Transfer_Learning_List = LIHC_TFL_pathways$term_id[LIHC_TFL_pathways$set == "Up"], 
+                limma_list = LIHC_limma_pathways$term_id[LIHC_limma_pathways$set == "Up"],
+                deseq2_list = LIHC_DESeq2_pathways$term_id[LIHC_DESeq2_pathways$set == "Up"], 
+                file_name= "~/output/upset_plots/lihc_up_pathway_upset_plot.png")
+
+
+#LUAD
+
+make_upset_plot(Transfer_Learning_List = LUAD_TFL_pathways$term_id[LUAD_TFL_pathways$set == "Up"], 
+                limma_list = LUAD_limma_pathways$term_id[LUAD_limma_pathways$set == "Up"],
+                deseq2_list = LUAD_DESeq2_pathways$term_id[LUAD_DESeq2_pathways$set == "Up"],  
+                file_name= "~/output/upset_plots/luad_up_pathway_upset_plot.png")
+
+#PAAD
+
+make_upset_plot(Transfer_Learning_List = PAAD_TFL_pathways$term_id[PAAD_TFL_pathways$set == "Up"], 
+                limma_list = PAAD_limma_pathways$term_id[PAAD_limma_pathways$set == "Up"],
+                deseq2_list = PAAD_DESeq2_pathways$term_id[PAAD_DESeq2_pathways$set == "Up"], 
+                file_name= "~/output/upset_plots/paad_up_pathway_upset_plot.png")
+
+```
+#upset of the gene sets down 
+```{r}
+#GBM
+
+make_upset_plot(Transfer_Learning_List = TFL_pathways$term_id[TFL_pathways$set == "Down"], 
+                limma_list = limma_pathways$term_id[limma_pathways$set == "Down"],
+                deseq2_list = DESeq2_pathways$term_id[DESeq2_pathways$set == "Down"], 
+                file_name= "~/output/upset_plots/gbm_down_pathway_upset_plot.png")
+
+#LIHC
+
+make_upset_plot(Transfer_Learning_List = LIHC_TFL_pathways$term_id[LIHC_TFL_pathways$set == "Down"], 
+                limma_list = LIHC_limma_pathways$term_id[LIHC_limma_pathways$set == "Down"],
+                deseq2_list = LIHC_DESeq2_pathways$term_id[LIHC_DESeq2_pathways$set == "Down"], 
+                file_name= "~/output/upset_plots/lihc_down_pathway_upset_plot.png")
+
+
+#LUAD
+
+make_upset_plot(Transfer_Learning_List = LUAD_TFL_pathways$term_id[LUAD_TFL_pathways$set == "Down"], 
+                limma_list = LUAD_limma_pathways$term_id[LUAD_limma_pathways$set == "Down"],
+                deseq2_list = LUAD_DESeq2_pathways$term_id[LUAD_DESeq2_pathways$set == "Down"],  
+                file_name= "~/output/upset_plots/luad_down_pathway_upset_plot.png")
+
+#PAAD
+
+make_upset_plot(Transfer_Learning_List = PAAD_TFL_pathways$term_id[PAAD_TFL_pathways$set == "Down"], 
+                limma_list = PAAD_limma_pathways$term_id[PAAD_limma_pathways$set == "Down"],
+                deseq2_list = PAAD_DESeq2_pathways$term_id[PAAD_DESeq2_pathways$set == "Down"], 
+                file_name= "~/output/upset_plots/paad_down_pathway_upset_plot.png")
+```
+
+
+
+```{r}
+sessionInfo()
+```
+
+

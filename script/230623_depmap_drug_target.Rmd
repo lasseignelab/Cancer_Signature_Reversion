@@ -1,0 +1,114 @@
+---
+title: "230623_depmap_drug_target"
+author: "Jennifer Fisher"
+date: "06/23/2023"
+output:
+  html_document: default
+---
+      Goal/Purpose of operations: 
+      The Archilles’s project investigated essential genes in cancer cell lines via CRISPR-Cas9 lost of function screen. We download the  “CRISPR (DepMap Public 23Q2+Score, Chronos)” scores for the available drug targets of pamidronate (i.e., FDPS) and nimodipine (i.e., AHR, CACNA1C, CACNA1D, CACNA1F, CACNA1S, CACNB1, CACNB2, CACNB3, CACNB4, CFTR, NR3C2) from the from the Cancer Dependency Map (DepMap) portal (Accessed date: June. 2023). The Chronos’s gene effect scores, that inferred if a gene is esstineal for cancer cell line survival. (Dempster et al. 2021) 
+    
+    Finished psedocode on: 
+    230623
+    
+    System which operations were done on: 
+    my laptop
+    
+    GitHub Repo:
+    /Users/jenniferfisher/Documents/test_stuff/Cancer_Signature_Reversion
+    
+    Docker/Singularity: 
+    rstudio_cancer_dr
+    
+    Directory of operations: 
+    "/home/rstudio"
+    
+    Scripts being edited for operations:
+    na
+    
+    Data being used:
+    
+    
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(readr)
+library(tidyverse)
+```
+
+import data from depmap download CRISPR AND RNAi files for drug target of  pamidronate (i.e., FDPS) and nimodipine (i.e., AHR, CACNA1C, CACNA1D, CACNA1F, CACNA1S, CACNB1, CACNB2, CACNB3, CACNB4, CFTR, NR3C2) 
+```{r}
+depmap_drug_target_info <- read_csv("~/data/depmap_export_2023-06-23 15_46_41.778423_subsetted.csv")
+```
+
+```{r}
+depmap_drug_target_info<- depmap_drug_target_info[depmap_drug_target_info$lineage_5 == "Glioblastoma" , ]
+colnames(depmap_drug_target_info)
+```
+
+
+```{r}
+#CRISPR (DepMap Public 23Q2+Score, Chronos)
+depmap_drug_target_crispr_info_nimodipine <- depmap_drug_target_info[, 9:20]
+
+colnames(depmap_drug_target_crispr_info_nimodipine)
+
+colnames(depmap_drug_target_crispr_info_nimodipine) <- str_split(colnames(depmap_drug_target_crispr_info_nimodipine), " ", simplify =  TRUE)[,6]
+
+
+depmap_drug_target_crispr_info_nimodipine_t <- as.data.frame(t(depmap_drug_target_crispr_info_nimodipine))
+
+depmap_drug_target_crispr_info_nimodipine_t$Drug_Target <- rownames(depmap_drug_target_crispr_info_nimodipine_t)
+
+depmap_drug_target_crispr_info_nimodipine_long <- pivot_longer(depmap_drug_target_crispr_info_nimodipine_t, col= !Drug_Target)
+
+depmap_drug_target_crispr_info_nimodipine_long$Drug <- ifelse(depmap_drug_target_crispr_info_nimodipine_long$Drug_Target == "FDPS", "pamidronate", "nimodipine")
+
+drug_order <- names(depmap_drug_target_crispr_info_nimodipine)[order(colMeans(depmap_drug_target_crispr_info_nimodipine, na.rm = TRUE))]
+depmap_drug_target_crispr_info_nimodipine_long<- as.data.frame(depmap_drug_target_crispr_info_nimodipine_long)
+depmap_drug_target_crispr_info_nimodipine_long$Drug_Target <- factor(depmap_drug_target_crispr_info_nimodipine_long$Drug_Target, levels = drug_order)
+
+crispr_plot <- ggplot(depmap_drug_target_crispr_info_nimodipine_long, aes(x= value, y= Drug_Target, fill= Drug)) +
+                  geom_boxplot(alpha = 0.8) + scale_fill_manual(values = c("#721F81FF", "#F1605DFF")) +
+                  xlab("Gene effect score\nCRISPR (DepMap Public 23Q2+Score, Chronos)") +
+                  ylab("Drug Targets") +
+                  theme(text = element_text(size = 20,  face="bold"))
+crispr_plot
+ggsave("~/output/230623_depmap_crispr_drug_targets.png", height=12, width=12)
+```
+
+```{r}
+#RNAi (Achilles+DRIVE+Marcotte, DEMETER2) 
+depmap_drug_target_RNAi_info_nimodipine <- depmap_drug_target_info[, 21:32]
+
+colnames(depmap_drug_target_RNAi_info_nimodipine) <- str_split(colnames(depmap_drug_target_RNAi_info_nimodipine), " ", simplify =  TRUE)[,4]
+
+
+depmap_drug_target_RNAi_info_nimodipine_t <- as.data.frame(t(depmap_drug_target_RNAi_info_nimodipine))
+
+depmap_drug_target_RNAi_info_nimodipine_t$Drug_Target <- rownames(depmap_drug_target_RNAi_info_nimodipine_t)
+
+depmap_drug_target_RNAi_info_nimodipine_long <- pivot_longer(depmap_drug_target_RNAi_info_nimodipine_t, col= !Drug_Target)
+
+depmap_drug_target_RNAi_info_nimodipine_long$Drug <- ifelse(depmap_drug_target_RNAi_info_nimodipine_long$Drug_Target == "FDPS", "pamidronate", "nimodipine")
+drug_order2 <- names(depmap_drug_target_RNAi_info_nimodipine)[order(colMeans(depmap_drug_target_RNAi_info_nimodipine, na.rm = TRUE))]
+depmap_drug_target_RNAi_info_nimodipine_long<- as.data.frame(depmap_drug_target_RNAi_info_nimodipine_long)
+depmap_drug_target_RNAi_info_nimodipine_long$Drug_Target <- factor(depmap_drug_target_RNAi_info_nimodipine_long$Drug_Target, levels = drug_order2)
+
+RNAi_plot <- ggplot(depmap_drug_target_RNAi_info_nimodipine_long, aes(x= value, y= Drug_Target, fill= Drug)) +
+  geom_boxplot() + scale_fill_manual(values = c("#721F81FF", "#F1605DFF")) +
+  xlab("Gene effect score\nRNAi (Achilles+DRIVE+Marcotte, DEMETER2)") +
+  ylab("Drug Targets") +
+  theme(text = element_text(size = 15,  face="bold"))
+
+RNAi_plot
+ggsave("~/output/230623_depmap_RNAi_drug_targets.png", height=12, width=8)
+```
+
+
+```{r}
+sessionInfo()
+```

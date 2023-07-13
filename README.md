@@ -21,7 +21,7 @@ We conclude that one disease-associated gene signature approach did not outperfo
 Department of Cell, Developmental and Integrative Biology, Heersink School of Medicine, University of Alabama at Birmingham, Birmingham, AL, 35294, USA.
 
 ## Dockers and Conda Environment
-In addition to the scripts here, the Docker images used for this analysis is publicly available on Docker Hub ([jenfisher7/rstudio_cancer_dr](https://hub.docker.com/r/jenfisher7/rstudio_cancer_dr) & [jenfisher7/rstudio_tf_dr_v3](https://hub.docker.com/r/jenfisher7/rstudio_tf_dr_v3)). For the tau calculations, a conda environment was used (SR_TAU_CELL_environment.yml).
+In addition to the scripts here, the Docker images used for this analysis is publicly available on Docker Hub ([jenfisher7/rstudio_cancer_dr:1.1.1](https://hub.docker.com/r/jenfisher7/rstudio_cancer_dr) & [jenfisher7/rstudio_tf_dr_v3:1.1.1](https://hub.docker.com/r/jenfisher7/rstudio_tf_dr_v3)). For the tau calculations, a conda environment was used (SR_TAU_CELL_environment.yml).
 
 ## Scripts
 
@@ -41,9 +41,9 @@ Note that in Dec. 2022, Recount3's server changed resulting in the current versi
 **Package versions for the Docker/singulairty**
 - 221221_rstudio_tf_dr_v3_singularity.Rmd
 
-**Tau value calcuation for signature reversion**
+**Tau value calculation for signature reversion**
 
-These scripts use the conda environment file SR_TAU_CELL_environment.yml. The ".sh" file was used to submit the cluster job on a slurm system in an array format. The R scripts were executed by these cluster job scripts. This allowed for more parrallel runs of the tau calculations. 
+These scripts use the conda environment file SR_TAU_CELL_environment.yml. The ".sh" file was used to submit the cluster job on a slurm system in an array format. The R scripts were executed by these cluster job scripts. This allowed for more parallel runs of the tau calculations. 
 
 Set Up for Tau Calculations:
  - 220125_conda_set_up.txt
@@ -134,7 +134,7 @@ Docker: jenfisher7/rstudio_cancer_dr
 
 ## Acknowledgements
 
- - We would like to thank all the Lasseigne Lab members for providing feedback during this project.
+ - We acknowledge support from the University of Alabama at Birmingham Biological Data Science Core, RRID:SCR_021766. We would like to thank all the Lasseigne Lab members for providing feedback during this project.
 
 ## Funding
 

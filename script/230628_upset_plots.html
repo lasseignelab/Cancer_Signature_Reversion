@@ -421,7 +421,7 @@ na</code></pre>
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <pre class="r"><code>#function for upset plots
 
-make_upset_plot&lt;- function(Transfer_Learning_List, limma_list, deseq2_list, file_name){
+make_upset_plot&lt;- function(Transfer_Learning_List, limma_list, deseq2_list, file_name) {
   comb_mat&lt;- make_comb_mat(list(&quot;Transfer Learning&quot; = Transfer_Learning_List, &quot;limma&quot; = limma_list, 
                                 &quot;DESeq2&quot; = deseq2_list), mode = &quot;distinct&quot;)
   
@@ -431,16 +431,22 @@ make_upset_plot&lt;- function(Transfer_Learning_List, limma_list, deseq2_list, f
                top_annotation = HeatmapAnnotation(&quot;Intersection size&quot; = anno_barplot(cs, 
                                        ylim = c(0, max(cs)*1.1),
                                        border = FALSE, 
-                                       gp = gpar(fill = &quot;black&quot;, fontsize = 11, face=&quot;bold&quot;), 
-                                       height = unit(4, &quot;cm&quot;)), 
-    annotation_name_side = &quot;left&quot;, 
-    annotation_name_rot = 90))
+                                       axis_param = list(gp = gpar(fontsize = 15)),
+                                       gp = gpar(fill = &quot;black&quot;, fontsize = 15, face=&quot;bold&quot;), 
+                                       height = unit(6, &quot;cm&quot;)), 
+                                       annotation_name_side = &quot;left&quot;, 
+                                       annotation_name_rot = 90),
+              right_annotation = upset_right_annotation(comb_mat,
+                                                        axis_param = list(gp = gpar(fontsize = 15))))
+  
   plot_draw &lt;- draw(plot)
+  
   od &lt;- column_order(plot_draw)
+  
   decorate_annotation(&quot;Intersection size&quot;, {
     grid.text(cs[od], x = seq_along(cs), y = unit(cs[od], &quot;native&quot;) + unit(2, &quot;pt&quot;), 
               default.units = &quot;native&quot;, just = c(&quot;left&quot;, &quot;bottom&quot;), 
-              gp = gpar(fontsize = 11, face=&quot;bold&quot;,col = &quot;#404040&quot;), rot = 45)})
+              gp = gpar(fontsize = 15, face=&quot;bold&quot;,col = &quot;#404040&quot;), rot = 45)})
   dev.off()
 }</code></pre>
 <p>#upset plots of diseases signatures</p>

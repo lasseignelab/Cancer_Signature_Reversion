@@ -39,7 +39,7 @@ library(tidyverse)
 ```{r}
 #function for upset plots
 
-make_upset_plot<- function(Transfer_Learning_List, limma_list, deseq2_list, file_name){
+make_upset_plot<- function(Transfer_Learning_List, limma_list, deseq2_list, file_name) {
   comb_mat<- make_comb_mat(list("Transfer Learning" = Transfer_Learning_List, "limma" = limma_list, 
                                 "DESeq2" = deseq2_list), mode = "distinct")
   
@@ -49,16 +49,22 @@ make_upset_plot<- function(Transfer_Learning_List, limma_list, deseq2_list, file
                top_annotation = HeatmapAnnotation("Intersection size" = anno_barplot(cs, 
                                        ylim = c(0, max(cs)*1.1),
                                        border = FALSE, 
-                                       gp = gpar(fill = "black", fontsize = 11, face="bold"), 
-                                       height = unit(4, "cm")), 
-    annotation_name_side = "left", 
-    annotation_name_rot = 90))
+                                       axis_param = list(gp = gpar(fontsize = 15)),
+                                       gp = gpar(fill = "black", fontsize = 15, face="bold"), 
+                                       height = unit(6, "cm")), 
+                                       annotation_name_side = "left", 
+                                       annotation_name_rot = 90),
+              right_annotation = upset_right_annotation(comb_mat,
+                                                        axis_param = list(gp = gpar(fontsize = 15))))
+  
   plot_draw <- draw(plot)
+  
   od <- column_order(plot_draw)
+  
   decorate_annotation("Intersection size", {
     grid.text(cs[od], x = seq_along(cs), y = unit(cs[od], "native") + unit(2, "pt"), 
               default.units = "native", just = c("left", "bottom"), 
-              gp = gpar(fontsize = 11, face="bold",col = "#404040"), rot = 45)})
+              gp = gpar(fontsize = 15, face="bold",col = "#404040"), rot = 45)})
   dev.off()
 }
 ```

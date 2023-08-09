@@ -1,0 +1,760 @@
+---
+title: "230511_more_gbm_drug_testing_res"
+author: "Jennifer Fisher"
+date: '2023-05-11'
+output:
+  html_document:
+    toc: true
+    theme: united
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# START 
+    Goal/Purpose of operations: 
+    Plot the results from the cell titer assay. There were two rounds of testing. One round tested four candidates at three different concentration with a control sovlent: pamidronate, nimodipine, icosapent, and saxagliptin. Pamidronate and nimodipine inhibit growth of the U251 GBM cell line in round one. Therefore, in round two we used three or four other drug concentrations for these two drugs in U251 cell lines and PDX JX39 cells. In addition, we evaluated these drugs in combination with TMZ, the standard of care for GBM. 
+    Note- the cell titer assay analysis was conducted by the Hjelmeland lab. 
+    
+    Finished psedocode on: 
+    221130
+    
+    System which operations were done on: 
+    my laptop
+    
+    GitHub Repo:
+    Transfer_Learning_R03
+    
+    Docker/Singularity: 
+    rstudio_cancer_dr
+    
+    Directory of operations: 
+    "/home/rstudio"
+    
+    Scripts being edited for operations:
+    functions were added to the /home/rstudio/script/functions_cancer_signature_reversion_JLF.R
+    
+    Data being used:
+    results from cell titer assay analysis a PRISM .pzfx file (Note different PRISM than the drug screen database)
+    
+    Papers and tools: 
+    NA
+
+# STEPS
+### Set working directory 
+```{r}
+source("/home/rstudio/script/functions_cancer_signature_reversion_JLF.R")
+library(ggpubr)
+library(tidyverse)
+library(rstatix)
+```
+
+```{r}
+#the folowing function (and internal functions) is from a r package called pzfx. The functions are inculded in the functions_cancer_signature_reversion_JLF.R script. 
+
+df1 <- read_pzfx("~/data/D456 Pam and nim 5.11.23.pzfx", table=1)
+
+df2 <- read_pzfx("~/data/D456 Pam and nim 5.11.23.pzfx", table=2)
+
+```
+pamidronate plot
+```{r}
+posn.d <- position_dodge(width=0.95)
+my_comparisons <- list( c("Vehicle", "20 uM"), # 1
+                        c("Vehicle", "40 uM"), # 2
+                        c("Vehicle", "60 uM"),  # 3
+                        c("Vehicle", "80 uM"), # 4
+                        
+                        c("20 uM", "40 uM"), #5
+                        c("20 uM", "60 uM"), #6
+                        c("20 uM", "80 uM"), #7
+                        
+                        c("40 uM", "60 uM"), #8
+                        c("40 uM", "80 uM"), #9
+                        
+                        c("60 uM", "80 uM") )#10
+
+df1_longer <- pivot_longer(df1, cols = everything())
+df1_longer$group <- c("Vehicle", "pamidronate", "pamidronate", "pamidronate",  "pamidronate","Vehicle", "pamidronate",  "pamidronate", "pamidronate", "pamidronate", "Vehicle", "pamidronate", "pamidronate",  "pamidronate", "pamidronate", "Vehicle", "pamidronate", "pamidronate", "pamidronate",  "pamidronate","Vehicle", "pamidronate",  "pamidronate", "pamidronate", "pamidronate", "Vehicle", "pamidronate", "pamidronate",  "pamidronate", "pamidronate")       
+df1_longer$dose<- c("Vehicle", "20 uM", "40 uM", "60 uM", "80 uM", "Vehicle", "20 uM", "40 uM", "60 uM", "80 uM", "Vehicle", "20 uM", "40 uM", "60 uM", "80 uM", "Vehicle", "20 uM", "40 uM", "60 uM", "80 uM", "Vehicle", "20 uM", "40 uM", "60 uM", "80 uM", "Vehicle", "20 uM", "40 uM", "60 uM", "80 uM")
+
+df1_longer$dose<- factor(df1_longer$dose, levels= c("Vehicle", "20 uM", "40 uM", "60 uM", "80 uM"))
+
+g1 <- ggplot(df1_longer, aes( x=dose, y=value, fill= group))+ stat_summary(fun.data=mean_sdl, geom="bar", color = "black")+ 
+    stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point(size =5)+
+    stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf",bracket.size=1, size= 5,vjust= 0.1,step.increase = 0.1, symnum.args = list(cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1), 
+         symbols = c("****", "***", "**", "*", "ns"))) + # Add pairwise comparisons p-value
+    stat_compare_means(method = "anova", label.y = 50000, size =10) +
+    labs(  x= "Groups (Control H2O)",y="Luminescence (RLU)")+
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6))  + theme(legend.position = "none")+ theme(text = element_text(size = 25,  face="bold")) + scale_fill_manual(values = c("#F1605DFF","darkgrey"))
+```
+temozolomide and nimodipine plot
+```{r}
+
+my_comparisons <- list( c("Vehicle", "20 uM"), # 1
+                        c("Vehicle", "30 uM"), # 2
+                        c("Vehicle", "40 uM"),  # 3
+                        c("Vehicle", "25 uM"), # 4
+                        
+                        c("20 uM", "30 uM"), #5
+                        c("20 uM", "40 uM"), #6
+                        c("20 uM", "25 uM"), #7
+                        
+                        c("30 uM", "40 uM"), #8
+                        c("30 uM", "25 uM"), #9
+                        
+                        c("40 uM", "25 uM") )#10
+
+df2_longer <- pivot_longer(df2[,1:5], cols = everything())
+df2_longer$group <- c("Vehicle", "nimodipine", "nimodipine", "nimodipine",  "temozolomide","Vehicle", "nimodipine",  "nimodipine", "nimodipine", "temozolomide", "Vehicle", "nimodipine", "nimodipine",  "nimodipine", "temozolomide", "Vehicle", "nimodipine", "nimodipine", "nimodipine",  "temozolomide","Vehicle", "nimodipine",  "nimodipine", "nimodipine", "temozolomide", "Vehicle", "nimodipine", "nimodipine",  "nimodipine", "temozolomide")       
+df2_longer$dose<- c("Vehicle", "20 uM", "30 uM", "40 uM", "25 uM", "Vehicle", "20 uM", "30 uM", "40 uM" ,"25 uM", "Vehicle", "20 uM", "30 uM", "40 uM", "25 uM", "Vehicle", "20 uM", "30 uM", "40 uM", "25 uM", "Vehicle", "20 uM", "30 uM", "40 uM" ,"25 uM", "Vehicle", "20 uM", "30 uM", "40 uM", "25 uM")
+
+df2_longer$dose<- factor(df2_longer$dose, levels= c("Vehicle", "20 uM", "30 uM", "40 uM", "25 uM"))
+
+g2<- ggplot(df2_longer, aes( x=dose, y=value, fill= group))+ stat_summary(fun.data=mean_sdl, geom="bar", color = "black")+ 
+    stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point(size =5)+
+    stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf",bracket.size=1, size= 5,vjust= 0.1,step.increase = 0.1, symnum.args = list(cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1), 
+         symbols = c("****", "***", "**", "*", "ns"))) + # Add pairwise comparisons p-value
+    stat_compare_means(method = "anova", label.y = 50000, size =10) +
+    labs(  x= "Groups (Control DMSO)",y="Luminescence (RLU)")+
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6))  + theme(legend.position = "none")+ theme(text = element_text(size = 25,  face="bold")) + scale_fill_manual(values = c("#721F81FF", "gold" ,"darkgrey"))
+```
+
+```{r}
+ggarrange(g1,  g2, ncol = 2, nrow = 1)
+ggsave("~/output/gbm_drug_celltiter_plots/230511_pamdronate_nimodipine_cell_titer_D456.png", height=8, width=18)
+```
+
+
+```{r}
+#the folowing function (and internal functions) is from a r package called pzfx. The functions are inculded in the functions_cancer_signature_reversion_JLF.R script. 
+
+#JX39
+df3 <- read_pzfx("~/data/Lasseigne Collaboration Prism Analysis 8.3.23.pzfx", table=1)
+#JX39
+df4 <- read_pzfx("~/data/Lasseigne Collaboration Prism Analysis 8.3.23.pzfx", table=2)
+#D456
+df5 <- read_pzfx("~/data/Lasseigne Collaboration Prism Analysis 8.3.23.pzfx", table=3)
+#D456
+df6 <- read_pzfx("~/data/Lasseigne Collaboration Prism Analysis 8.3.23.pzfx", table=4)
+#U251
+df7 <- read_pzfx("~/data/Lasseigne Collaboration Prism Analysis 8.3.23.pzfx", table=5)
+#U251
+df8 <- read_pzfx("~/data/Lasseigne Collaboration Prism Analysis 8.3.23.pzfx", table=6)
+
+```
+
+```{r}
+pam_JX39_plot <- cbind(df3[, 1:5], df4[,6])
+colnames(pam_JX39_plot)[6]<- "TMZ 25"
+```
+
+```{r}
+pam_JX39_plot
+```
+
+```{r}
+my_comparisons <- list( c("H20", "20"), # 1. expression(paste("20 ", mu, "M")
+                        c("H20", "10"), # 2
+                        c("H20", "1"),  # 3
+                        c("H20", "0.1"),  # 3
+                        c("H20", "25"), # 4
+                        
+                        c("20", "10"), # 2
+                        c("20", "1"),  # 3
+                        c("20", "0.1"),  # 3
+                        c("20", "25"), # 4
+                        
+                        c("10", "1"),  # 3
+                        c("10", "0.1"),  # 3
+                        c("10", "25"), # 4
+                        
+                        c("1", "0.1"),  # 3
+                        c("1", "25"), # 4
+                                     
+                        c("0.1", "25")) #10
+
+pam_JX39_plot_longer <- pivot_longer(pam_JX39_plot, cols = everything())
+pam_JX39_plot_longer$group <- c("H20", "pamidronate", "pamidronate", "pamidronate", "pamidronate", "temozolomide","H20", "pamidronate", "pamidronate", "pamidronate", "pamidronate", "temozolomide","H20", "pamidronate", "pamidronate", "pamidronate", "pamidronate", "temozolomide")  
+
+pam_JX39_plot_longer$dose<- c("H20", "20", "10", "1","0.1", "25", "H20", "20", "10", "1","0.1", "25", "H20", "20", "10", "1","0.1", "25")
+
+pam_JX39_plot_longer$dose<- factor(pam_JX39_plot_longer$dose, levels= c( "H20", "20", "10", "1","0.1", "25" ))
+
+pam_JX39_g2<- ggplot(pam_JX39_plot_longer, aes( x=dose, y=value, fill= group)) +
+    stat_summary(fun.data=mean_sdl, geom="bar", color = "black")+ 
+    stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point(size =5)+
+    stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf",bracket.size=1, size= 5,vjust= 0.1,step.increase = 0.1, symnum.args = list(cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1), 
+         symbols = c("****", "***", "**", "*", "ns"))) + # Add pairwise comparisons p-value
+    stat_compare_means(method = "anova", label.y = 85000, size =10) +
+    labs(  x= expression(paste("Treatments ", mu, "M")), y="Luminescence (RLU)")+
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6))  + theme(legend.position = "none")+ theme(text = element_text(size = 25,  face="bold")) + scale_fill_manual(values = c("darkgrey", "#F1605DFF", "gold"))
+```
+
+```{r}
+pam_JX39_g2
+```
+
+```{r}
+nim_JX39_plot <-df4[, 1:6]
+```
+
+```{r}
+nim_JX39_plot
+```
+
+```{r}
+my_comparisons <- list( c("DMSO", "20"), # 1. expression(paste("20 ", mu, "M")
+                        c("DMSO", "10"), # 2
+                        c("DMSO", "1"),  # 3
+                        c("DMSO", "0.1"),  # 3
+                        c("DMSO", "25"), # 4
+                        
+                        c("20", "10"), # 2
+                        c("20", "1"),  # 3
+                        c("20", "0.1"),  # 3
+                        c("20", "25"), # 4
+                        
+                        c("10", "1"),  # 3
+                        c("10", "0.1"),  # 3
+                        c("10", "25"), # 4
+                        
+                        c("1", "0.1"),  # 3
+                        c("1", "25"), # 4
+                                     
+                        c("0.1", "25")) #10
+
+nim_JX39_plot_longer <- pivot_longer(nim_JX39_plot, cols = everything())
+nim_JX39_plot_longer$group <- c("DMSO", "nimodipine", "nimodipine", "nimodipine", "nimodipine", "temozolomide","DMSO", "nimodipine", "nimodipine", "nimodipine", "nimodipine", "temozolomide", "DMSO", "nimodipine", "nimodipine", "nimodipine", "nimodipine", "temozolomide")  
+
+nim_JX39_plot_longer$dose<- c("DMSO", "20", "10", "1","0.1", "25", "DMSO", "20", "10", "1","0.1", "25", "DMSO", "20", "10", "1","0.1", "25")
+
+nim_JX39_plot_longer$dose<- factor(nim_JX39_plot_longer$dose, levels= c( "DMSO", "20", "10", "1","0.1", "25" ))
+
+nim_JX39_plot_g2<- ggplot(nim_JX39_plot_longer, aes( x=dose, y=value, fill= group)) +
+    stat_summary(fun.data=mean_sdl, geom="bar", color = "black")+ 
+    stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point(size =5)+
+    stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf",bracket.size=1, size= 5,vjust= 0.1,step.increase = 0.1, symnum.args = list(cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1), 
+         symbols = c("****", "***", "**", "*", "ns"))) + # Add pairwise comparisons p-value
+    stat_compare_means(method = "anova", label.y = 80000, size =10) +
+    labs(  x= expression(paste("Treatments ", mu, "M")), y="Luminescence (RLU)")+
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6))  + theme(legend.position = "none")+ theme(text = element_text(size = 25,  face="bold")) + scale_fill_manual(values = c("darkgrey", "#721F81FF", "gold"))
+```
+
+```{r}
+nim_JX39_plot_g2
+```
+
+```{r}
+pam_D456_plot <- cbind(df5[, 1:5], df6[,6])
+colnames(pam_D456_plot)[6]<- "TMZ 25"
+```
+
+```{r}
+pam_D456_plot
+```
+
+```{r}
+my_comparisons <- list( c("H20", "20"), # 1. expression(paste("20 ", mu, "M")
+                        c("H20", "10"), # 2
+                        c("H20", "1"),  # 3
+                        c("H20", "0.1"),  # 3
+                        c("H20", "25"), # 4
+                        
+                        c("20", "10"), # 2
+                        c("20", "1"),  # 3
+                        c("20", "0.1"),  # 3
+                        c("20", "25"), # 4
+                        
+                        c("10", "1"),  # 3
+                        c("10", "0.1"),  # 3
+                        c("10", "25"), # 4
+                        
+                        c("1", "0.1"),  # 3
+                        c("1", "25"), # 4
+                                     
+                        c("0.1", "25")) #10
+
+pam_D456_plot_longer <- pivot_longer(pam_D456_plot, cols = everything())
+pam_D456_plot_longer$group <- c("H20", "pamidronate", "pamidronate", "pamidronate", "pamidronate", "temozolomide","H20", "pamidronate", "pamidronate", "pamidronate", "pamidronate", "temozolomide","H20", "pamidronate", "pamidronate", "pamidronate", "pamidronate", "temozolomide")  
+
+pam_D456_plot_longer$dose<- c("H20", "20", "10", "1","0.1", "25", "H20", "20", "10", "1","0.1", "25", "H20", "20", "10", "1","0.1", "25")
+
+pam_D456_plot_longer$dose<- factor(pam_D456_plot_longer$dose, levels= c( "H20", "20", "10", "1","0.1", "25" ))
+
+pam_D456_g2<- ggplot(pam_D456_plot_longer, aes( x=dose, y=value, fill= group)) +
+    stat_summary(fun.data=mean_sdl, geom="bar", color = "black")+ 
+    stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point(size =5)+
+    stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf",bracket.size=1, size= 5,vjust= 0.1,step.increase = 0.1, symnum.args = list(cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1), 
+         symbols = c("****", "***", "**", "*", "ns"))) + # Add pairwise comparisons p-value
+    stat_compare_means(method = "anova", label.y = 50000, size =10) +
+    labs(  x= expression(paste("Treatments ", mu, "M")), y="Luminescence (RLU)")+
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6))  + theme(legend.position = "none")+ theme(text = element_text(size = 25,  face="bold")) + scale_fill_manual(values = c("darkgrey", "#F1605DFF", "gold"))
+```
+
+```{r}
+pam_D456_g2
+```
+
+```{r}
+nim_D456_plot <-df6[, 1:6]
+```
+
+```{r}
+nim_D456_plot
+```
+
+```{r}
+my_comparisons <- list( c("DMSO", "20"), # 1. expression(paste("20 ", mu, "M")
+                        c("DMSO", "10"), # 2
+                        c("DMSO", "1"),  # 3
+                        c("DMSO", "0.1"),  # 3
+                        c("DMSO", "25"), # 4
+                        
+                        c("20", "10"), # 2
+                        c("20", "1"),  # 3
+                        c("20", "0.1"),  # 3
+                        c("20", "25"), # 4
+                        
+                        c("10", "1"),  # 3
+                        c("10", "0.1"),  # 3
+                        c("10", "25"), # 4
+                        
+                        c("1", "0.1"),  # 3
+                        c("1", "25"), # 4
+                                     
+                        c("0.1", "25")) #10
+
+nim_D456_plot_longer <- pivot_longer(nim_D456_plot, cols = everything())
+nim_D456_plot_longer$group <- c("DMSO", "nimodipine", "nimodipine", "nimodipine", "nimodipine", "temozolomide","DMSO", "nimodipine", "nimodipine", "nimodipine", "nimodipine", "temozolomide", "DMSO", "nimodipine", "nimodipine", "nimodipine", "nimodipine", "temozolomide")  
+
+nim_D456_plot_longer$dose<- c("DMSO", "20", "10", "1","0.1", "25", "DMSO", "20", "10", "1","0.1", "25", "DMSO", "20", "10", "1","0.1", "25")
+
+nim_D456_plot_longer$dose<- factor(nim_D456_plot_longer$dose, levels= c( "DMSO", "20", "10", "1","0.1", "25" ))
+
+nim_D456_plot_g2<- ggplot(nim_D456_plot_longer, aes( x=dose, y=value, fill= group)) +
+    stat_summary(fun.data=mean_sdl, geom="bar", color = "black")+ 
+    stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point(size =5)+
+    stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf",bracket.size=1, size= 5,vjust= 0.1,step.increase = 0.1, symnum.args = list(cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1), 
+         symbols = c("****", "***", "**", "*", "ns"))) + # Add pairwise comparisons p-value
+    stat_compare_means(method = "anova", label.y = 45000, size =10) +
+    labs(  x= expression(paste("Treatments ", mu, "M")), y="Luminescence (RLU)")+
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6))  + theme(legend.position = "none")+ theme(text = element_text(size = 25,  face="bold")) + scale_fill_manual(values = c("darkgrey", "#721F81FF", "gold"))
+```
+
+```{r}
+nim_D456_plot_g2
+```
+
+```{r}
+pam_U251_plot <- cbind(df7[, 1:5], df8[,6])
+colnames(pam_U251_plot)[6]<- "TMZ 25"
+```
+
+```{r}
+pam_U251_plot
+```
+
+```{r}
+my_comparisons <- list( c("H20", "20"), # 1. expression(paste("20 ", mu, "M")
+                        c("H20", "10"), # 2
+                        c("H20", "1"),  # 3
+                        c("H20", "0.1"),  # 3
+                        c("H20", "25"), # 4
+                        
+                        c("20", "10"), # 2
+                        c("20", "1"),  # 3
+                        c("20", "0.1"),  # 3
+                        c("20", "25"), # 4
+                        
+                        c("10", "1"),  # 3
+                        c("10", "0.1"),  # 3
+                        c("10", "25"), # 4
+                        
+                        c("1", "0.1"),  # 3
+                        c("1", "25"), # 4
+                                     
+                        c("0.1", "25")) #10
+
+pam_U251_plot_longer <- pivot_longer(pam_U251_plot, cols = everything())
+pam_U251_plot_longer$group <- c("H20", "pamidronate", "pamidronate", "pamidronate", "pamidronate", "temozolomide","H20", "pamidronate", "pamidronate", "pamidronate", "pamidronate", "temozolomide","H20", "pamidronate", "pamidronate", "pamidronate", "pamidronate", "temozolomide")  
+
+pam_U251_plot_longer$dose<- c("H20", "20", "10", "1","0.1", "25", "H20", "20", "10", "1","0.1", "25", "H20", "20", "10", "1","0.1", "25")
+
+pam_U251_plot_longer$dose<- factor(pam_U251_plot_longer$dose, levels= c( "H20", "20", "10", "1","0.1", "25" ))
+
+pam_U251_g2<- ggplot(pam_U251_plot_longer, aes( x=dose, y=value, fill= group)) +
+    stat_summary(fun.data=mean_sdl, geom="bar", color = "black")+ 
+    stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point(size =5)+
+    stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf",bracket.size=1, size= 5,vjust= 0.1,step.increase = 0.1, symnum.args = list(cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1), 
+         symbols = c("****", "***", "**", "*", "ns"))) + # Add pairwise comparisons p-value
+    stat_compare_means(method = "anova", label.y = 50000, size =10) +
+    labs(  x= expression(paste("Treatments ", mu, "M")), y="Luminescence (RLU)")+
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6))  + theme(legend.position = "none")+ theme(text = element_text(size = 25,  face="bold")) + scale_fill_manual(values = c("darkgrey", "#F1605DFF", "gold"))
+```
+
+```{r}
+pam_U251_g2
+```
+
+```{r}
+nim_U251_plot <-df8[, 1:6]
+```
+
+```{r}
+nim_U251_plot
+```
+
+```{r}
+my_comparisons <- list( c("DMSO", "20"), # 1. expression(paste("20 ", mu, "M")
+                        c("DMSO", "10"), # 2
+                        c("DMSO", "1"),  # 3
+                        c("DMSO", "0.1"),  # 3
+                        c("DMSO", "25"), # 4
+                        
+                        c("20", "10"), # 2
+                        c("20", "1"),  # 3
+                        c("20", "0.1"),  # 3
+                        c("20", "25"), # 4
+                        
+                        c("10", "1"),  # 3
+                        c("10", "0.1"),  # 3
+                        c("10", "25"), # 4
+                        
+                        c("1", "0.1"),  # 3
+                        c("1", "25"), # 4
+                                     
+                        c("0.1", "25")) #10
+
+nim_U251_plot_longer <- pivot_longer(nim_U251_plot, cols = everything())
+nim_U251_plot_longer$group <- c("DMSO", "nimodipine", "nimodipine", "nimodipine", "nimodipine", "temozolomide","DMSO", "nimodipine", "nimodipine", "nimodipine", "nimodipine", "temozolomide", "DMSO", "nimodipine", "nimodipine", "nimodipine", "nimodipine", "temozolomide")  
+
+nim_U251_plot_longer$dose<- c("DMSO", "20", "10", "1","0.1", "25", "DMSO", "20", "10", "1","0.1", "25", "DMSO", "20", "10", "1","0.1", "25")
+
+nim_U251_plot_longer$dose<- factor(nim_U251_plot_longer$dose, levels= c( "DMSO", "20", "10", "1","0.1", "25" ))
+
+nim_U251_plot_g2<- ggplot(nim_U251_plot_longer, aes( x=dose, y=value, fill= group)) +
+    stat_summary(fun.data=mean_sdl, geom="bar", color = "black")+ 
+    stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point(size =5)+
+    stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf",bracket.size=1, size= 5,vjust= 0.1,step.increase = 0.1, symnum.args = list(cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1), 
+         symbols = c("****", "***", "**", "*", "ns"))) + # Add pairwise comparisons p-value
+    stat_compare_means(method = "anova", label.y = 100000, size =10) +
+    labs(  x= expression(paste("Treatments ", mu, "M")), y="Luminescence (RLU)")+
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6))  + theme(legend.position = "none")+ theme(text = element_text(size = 25,  face="bold")) + scale_fill_manual(values = c("darkgrey", "#721F81FF", "gold"))
+```
+
+```{r}
+nim_U251_plot_g2
+```
+
+#SAX
+```{r}
+sax_JX39_plot <- df3[,6:10]
+```
+
+```{r}
+sax_JX39_plot 
+```
+
+```{r}
+my_comparisons <- list( c("DMSO", "20"), # 1. expression(paste("20 ", mu, "M")
+                        c("DMSO", "10"), # 2
+                        c("DMSO", "1"),  # 3
+                        c("DMSO", "0.1"),  # 3
+                        
+                        c("20", "10"), # 2
+                        c("20", "1"),  # 3
+                        c("20", "0.1"),  # 3
+                        
+                        c("10", "1"),  # 3
+                        c("10", "0.1"),  # 3
+                        
+                        c("1", "0.1"))  # 3
+
+sax_JX39_plot_longer <- pivot_longer(sax_JX39_plot , cols = everything())
+sax_JX39_plot_longer$group <- c("DMSO", "saxagliptin", "saxagliptin", "saxagliptin", "saxagliptin", "DMSO", "saxagliptin", "saxagliptin", "saxagliptin", "saxagliptin", "DMSO", "saxagliptin", "saxagliptin", "saxagliptin", "saxagliptin")  
+
+sax_JX39_plot_longer$dose<- c("DMSO", "20", "10", "1","0.1", "DMSO", "20", "10", "1","0.1",  "DMSO", "20", "10", "1","0.1")
+
+sax_JX39_plot_longer$dose<- factor(sax_JX39_plot_longer$dose, levels= c( "DMSO", "20", "10", "1","0.1"))
+
+sax_JX39_plot_g2<- ggplot(sax_JX39_plot_longer, aes( x=dose, y=value, fill= group)) +
+    stat_summary(fun.data=mean_sdl, geom="bar", color = "black")+ 
+    stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point(size =5)+
+    stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf",bracket.size=1, size= 5,vjust= 0.1,step.increase = 0.1, symnum.args = list(cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1), 
+         symbols = c("****", "***", "**", "*", "ns"))) + # Add pairwise comparisons p-value
+    stat_compare_means(method = "anova", label.y = 60000, size =10) +
+    labs(  x= expression(paste("Treatments ", mu, "M")), y="Luminescence (RLU)")+
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6))  + theme(legend.position = "none")+ theme(text = element_text(size = 25,  face="bold")) + scale_fill_manual(values = c("darkgrey", "#66c2a5"))
+```
+
+```{r}
+sax_JX39_plot_g2
+```
+
+#SAX
+```{r}
+sax_D456_plot <- df5[,6:10]
+```
+
+```{r}
+sax_D456_plot 
+```
+
+```{r}
+my_comparisons <- list( c("DMSO", "20"), # 1. expression(paste("20 ", mu, "M")
+                        c("DMSO", "10"), # 2
+                        c("DMSO", "1"),  # 3
+                        c("DMSO", "0.1"),  # 3
+                        
+                        c("20", "10"), # 2
+                        c("20", "1"),  # 3
+                        c("20", "0.1"),  # 3
+                        
+                        c("10", "1"),  # 3
+                        c("10", "0.1"),  # 3
+                        
+                        c("1", "0.1"))  # 3
+
+sax_D456_plot_longer <- pivot_longer(sax_D456_plot , cols = everything())
+sax_D456_plot_longer$group <- c("DMSO", "saxagliptin", "saxagliptin", "saxagliptin", "saxagliptin", "DMSO", "saxagliptin", "saxagliptin", "saxagliptin", "saxagliptin", "DMSO", "saxagliptin", "saxagliptin", "saxagliptin", "saxagliptin")  
+
+sax_D456_plot_longer$dose<- c("DMSO", "20", "10", "1","0.1", "DMSO", "20", "10", "1","0.1",  "DMSO", "20", "10", "1","0.1")
+
+sax_D456_plot_longer$dose<- factor(sax_D456_plot_longer$dose, levels= c( "DMSO", "20", "10", "1","0.1"))
+
+sax_D456_plot_g2<- ggplot(sax_D456_plot_longer, aes( x=dose, y=value, fill= group)) +
+    stat_summary(fun.data=mean_sdl, geom="bar", color = "black")+ 
+    stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point(size =5)+
+    stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf",bracket.size=1, size= 5,vjust= 0.1,step.increase = 0.1, symnum.args = list(cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1), 
+         symbols = c("****", "***", "**", "*", "ns"))) + # Add pairwise comparisons p-value
+    stat_compare_means(method = "anova", label.y = 45000, size =10) +
+    labs(  x= expression(paste("Treatments ", mu, "M")), y="Luminescence (RLU)")+
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6))  + theme(legend.position = "none")+ theme(text = element_text(size = 25,  face="bold")) + scale_fill_manual(values = c("darkgrey", "#66c2a5"))
+```
+
+```{r}
+sax_D456_plot_g2
+```
+
+
+#SAX
+```{r}
+sax_U251_plot <- df7[,6:10]
+```
+
+```{r}
+sax_U251_plot 
+```
+
+```{r}
+my_comparisons <- list( c("DMSO", "20"), # 1. expression(paste("20 ", mu, "M")
+                        c("DMSO", "10"), # 2
+                        c("DMSO", "1"),  # 3
+                        c("DMSO", "0.1"),  # 3
+                        
+                        c("20", "10"), # 2
+                        c("20", "1"),  # 3
+                        c("20", "0.1"),  # 3
+                        
+                        c("10", "1"),  # 3
+                        c("10", "0.1"),  # 3
+                        
+                        c("1", "0.1"))  # 3
+
+sax_U251_plot_longer <- pivot_longer(sax_U251_plot , cols = everything())
+sax_U251_plot_longer$group <- c("DMSO", "saxagliptin", "saxagliptin", "saxagliptin", "saxagliptin", "DMSO", "saxagliptin", "saxagliptin", "saxagliptin", "saxagliptin", "DMSO", "saxagliptin", "saxagliptin", "saxagliptin", "saxagliptin")  
+
+sax_U251_plot_longer$dose<- c("DMSO", "20", "10", "1","0.1", "DMSO", "20", "10", "1","0.1",  "DMSO", "20", "10", "1","0.1")
+
+sax_U251_plot_longer$dose<- factor(sax_U251_plot_longer$dose, levels= c( "DMSO", "20", "10", "1","0.1"))
+
+sax_U251_plot_g2<- ggplot(sax_U251_plot_longer, aes( x=dose, y=value, fill= group)) +
+    stat_summary(fun.data=mean_sdl, geom="bar", color = "black")+ 
+    stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point(size =5)+
+    stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf",bracket.size=1, size= 5,vjust= 0.1,step.increase = 0.9, symnum.args = list(cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1), 
+         symbols = c("****", "***", "**", "*", "ns"))) + # Add pairwise comparisons p-value
+    stat_compare_means(method = "anova", label.y = 85000, size =10) +
+    labs(  x= expression(paste("Treatments ", mu, "M")), y="Luminescence (RLU)")+
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6))  + theme(legend.position = "none")+ theme(text = element_text(size = 25,  face="bold")) + scale_fill_manual(values = c("darkgrey", "#66c2a5"))
+```
+
+```{r}
+sax_U251_plot_g2
+```
+
+
+#ico
+```{r}
+ico_JX39_plot <- df4[,c(1, 7:10)]
+```
+
+```{r}
+ico_JX39_plot
+```
+
+```{r}
+my_comparisons <- list( c("DMSO", "20"), # 1. expression(paste("20 ", mu, "M")
+                        c("DMSO", "10"), # 2
+                        c("DMSO", "1"),  # 3
+                        c("DMSO", "0.1"),  # 3
+                        
+                        c("20", "10"), # 2
+                        c("20", "1"),  # 3
+                        c("20", "0.1"),  # 3
+                        
+                        c("10", "1"),  # 3
+                        c("10", "0.1"),  # 3
+                        
+                        c("1", "0.1"))  # 3
+
+ico_JX39_plot_longer <- pivot_longer(ico_JX39_plot , cols = everything())
+ico_JX39_plot_longer$group <- c("DMSO", "icosapent", "icosapent", "icosapent", "icosapent", "DMSO", "icosapent", "icosapent", "icosapent", "icosapent", "DMSO", "icosapent", "icosapent", "icosapent", "icosapent")  
+
+ico_JX39_plot_longer$dose<- c("DMSO", "20", "10", "1","0.1", "DMSO", "20", "10", "1","0.1",  "DMSO", "20", "10", "1","0.1")
+
+ico_JX39_plot_longer$dose<- factor(ico_JX39_plot_longer$dose, levels= c( "DMSO", "20", "10", "1","0.1"))
+
+ico_JX39_plot_g2<- ggplot(ico_JX39_plot_longer, aes( x=dose, y=value, fill= group)) +
+    stat_summary(fun.data=mean_sdl, geom="bar", color = "black")+ 
+    stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point(size =5)+
+    stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf",bracket.size=1, size= 5,vjust= 0.1,step.increase = 0.1, symnum.args = list(cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1), 
+         symbols = c("****", "***", "**", "*", "ns"))) + # Add pairwise comparisons p-value
+    stat_compare_means(method = "anova", label.y = 60000, size =10) +
+    labs(  x= expression(paste("Treatments ", mu, "M")), y="Luminescence (RLU)")+
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6))  + theme(legend.position = "none")+ theme(text = element_text(size = 25,  face="bold")) + scale_fill_manual(values = c("darkgrey", "#8da0cb"))
+```
+
+```{r}
+ico_JX39_plot_g2
+```
+
+#SAX
+```{r}
+ico_D456_plot <- df6[,c(1, 7:10)]
+```
+
+```{r}
+ico_D456_plot 
+```
+
+```{r}
+my_comparisons <- list( c("DMSO", "20"), # 1. expression(paste("20 ", mu, "M")
+                        c("DMSO", "10"), # 2
+                        c("DMSO", "1"),  # 3
+                        c("DMSO", "0.1"),  # 3
+                        
+                        c("20", "10"), # 2
+                        c("20", "1"),  # 3
+                        c("20", "0.1"),  # 3
+                        
+                        c("10", "1"),  # 3
+                        c("10", "0.1"),  # 3
+                        
+                        c("1", "0.1"))  # 3
+
+ico_D456_plot_longer <- pivot_longer(ico_D456_plot , cols = everything())
+ico_D456_plot_longer$group <- c("DMSO", "icosapent", "icosapent", "icosapent", "icosapent", "DMSO", "icosapent", "icosapent", "icosapent", "icosapent", "DMSO", "icosapent", "icosapent", "icosapent", "icosapent")  
+
+ico_D456_plot_longer$dose<- c("DMSO", "20", "10", "1","0.1", "DMSO", "20", "10", "1","0.1",  "DMSO", "20", "10", "1","0.1")
+
+ico_D456_plot_longer$dose<- factor(ico_D456_plot_longer$dose, levels= c( "DMSO", "20", "10", "1","0.1"))
+
+ico_D456_plot_g2<- ggplot(ico_D456_plot_longer, aes( x=dose, y=value, fill= group)) +
+    stat_summary(fun.data=mean_sdl, geom="bar", color = "black")+ 
+    stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point(size =5)+
+    stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf",bracket.size=1, size= 5,vjust= 0.1,step.increase = 0.1, symnum.args = list(cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1), 
+         symbols = c("****", "***", "**", "*", "ns"))) + # Add pairwise comparisons p-value
+    stat_compare_means(method = "anova", label.y = 45000, size =10) +
+    labs(  x= expression(paste("Treatments ", mu, "M")), y="Luminescence (RLU)")+
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6))  + theme(legend.position = "none")+ theme(text = element_text(size = 25,  face="bold")) + scale_fill_manual(values = c("darkgrey", "#8da0cb"))
+```
+
+```{r}
+ico_D456_plot_g2
+```
+
+
+#SAX
+```{r}
+ico_U251_plot <- df8[,c(1,7:10)]
+```
+
+```{r}
+ico_U251_plot 
+```
+
+```{r}
+my_comparisons <- list( c("DMSO", "20"), # 1. expression(paste("20 ", mu, "M")
+                        c("DMSO", "10"), # 2
+                        c("DMSO", "1"),  # 3
+                        c("DMSO", "0.1"),  # 3
+                        
+                        c("20", "10"), # 2
+                        c("20", "1"),  # 3
+                        c("20", "0.1"),  # 3
+                        
+                        c("10", "1"),  # 3
+                        c("10", "0.1"),  # 3
+                        
+                        c("1", "0.1"))  # 3
+
+ico_U251_plot_longer <- pivot_longer(ico_U251_plot  , cols = everything())
+ico_U251_plot_longer$group <- c("DMSO", "saxagliptin", "saxagliptin", "saxagliptin", "saxagliptin", "DMSO", "saxagliptin", "saxagliptin", "saxagliptin", "saxagliptin", "DMSO", "saxagliptin", "saxagliptin", "saxagliptin", "saxagliptin")  
+
+ico_U251_plot_longer$dose<- c("DMSO", "20", "10", "1","0.1", "DMSO", "20", "10", "1","0.1",  "DMSO", "20", "10", "1","0.1")
+
+ico_U251_plot_longer$dose<- factor(ico_U251_plot_longer$dose, levels= c( "DMSO", "20", "10", "1","0.1"))
+
+ico_U251_plot_g2<- ggplot(ico_U251_plot_longer, aes( x=dose, y=value, fill= group)) +
+    stat_summary(fun.data=mean_sdl, geom="bar", color = "black")+ 
+    stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point(size =5)+
+    stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf",bracket.size=1, size= 5,vjust= 0.1,step.increase = 0.9, symnum.args = list(cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1), 
+         symbols = c("****", "***", "**", "*", "ns"))) + # Add pairwise comparisons p-value
+    stat_compare_means(method = "anova", label.y = 85000, size =10) +
+    labs(  x= expression(paste("Treatments ", mu, "M")), y="Luminescence (RLU)")+
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6))  + theme(legend.position = "none")+ theme(text = element_text(size = 25,  face="bold")) + scale_fill_manual(values = c("darkgrey", "#8da0cb"))
+```
+
+```{r}
+ico_U251_plot_g2
+```
+
+
+#Jx39 pam and nim
+```{r}
+ggarrange(pam_JX39_g2,  nim_JX39_plot_g2, ncol = 1, nrow = 2)
+ggsave("~/output/gbm_drug_celltiter_plots/230804_pamdronate_nimodipine_cell_titer_JX39.png", height=18, width=8)
+```
+
+#D456 pam and nim
+```{r}
+ggarrange(pam_D456_g2,  nim_D456_plot_g2, ncol = 1, nrow = 2)
+ggsave("~/output/gbm_drug_celltiter_plots/230804_pamdronate_nimodipine_cell_titer_D456.png", height=18, width=8)
+```
+
+#U251 pam and nim
+```{r}
+ggarrange(pam_U251_g2,  nim_U251_plot_g2, ncol = 1, nrow = 2)
+ggsave("~/output/gbm_drug_celltiter_plots/230804_pamdronate_nimodipine_cell_titer_U251.png", height=18, width=8)
+```
+
+#Jx39 SAX AND ICO
+```{r}
+ggarrange(sax_JX39_plot_g2, ico_JX39_plot_g2, ncol = 1, nrow = 2)
+ggsave("~/output/gbm_drug_celltiter_plots/230804_saxagliptin_icosapent_cell_titer_JX39.png", height=18, width=8)
+```
+
+#D456 SAX AND ICO
+```{r}
+ggarrange(sax_D456_plot_g2,  ico_D456_plot_g2, ncol = 1, nrow = 2)
+ggsave("~/output/gbm_drug_celltiter_plots/230804_saxagliptin_icosapent_cell_titer_D456.png", height=18, width=8)
+```
+
+#U251 SAX AND ICO
+```{r}
+ggarrange(sax_U251_plot_g2,  ico_U251_plot_g2, ncol = 1, nrow = 2)
+ggsave("~/output/gbm_drug_celltiter_plots/230804_saxagliptin_icosapent_cell_titer_U251.png", height=18, width=8)
+```
+
